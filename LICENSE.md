@@ -1,29 +1,31 @@
-# License — dust_transfer MVP 0.1.0 evaluation snapshot
+# License for the dust_transfer MVP 0.1.0 evaluation snapshot
 
 Copyright (c) 2026 Truman DeWalch. All rights reserved.
 
-This snapshot ("the software") is licensed under the **PolyForm Strict License
-1.0.0**, reproduced verbatim below. It covers exactly the files listed in
-`MANIFEST.sha256` at the bundle root (the `dust_transfer/` package, its vendored
-`crates/` and `assets/`, and the accompanying documents)
-and nothing else. It is a minimal subset of a larger private code base; that
-code base, later versions, and anything not in the manifest are **not**
+This snapshot ("the software") is licensed under the PolyForm Strict License
+1.0.0, reproduced verbatim below. It covers exactly the files listed in
+`MANIFEST.sha256` at the bundle root: the `dust_transfer/` package, its
+vendored `crates/` and `assets/`, and the accompanying documents. It covers
+nothing else. The software is a minimal subset of a larger private code base.
+That code base, later versions, and anything not in the manifest are not
 licensed by these terms.
 
-The software was written by Truman DeWalch as part of doctoral research at
-Virginia Tech supported by NASA Early Career Faculty grant 80NSSC23K1502
-(Space Technology Research Grants Program). Third-party components and data redistributed with it remain
-under their own licenses, listed in `THIRD_PARTY_NOTICES.md`.
+Truman DeWalch wrote the software as part of doctoral research at Virginia
+Tech, supported by NASA Early Career Faculty grant 80NSSC23K1502 (Space
+Technology Research Grants Program). Third-party components and data
+redistributed with it stay under their own licenses, listed in
+`THIRD_PARTY_NOTICES.md`.
 
 ## Additional permission for BQP
 
 In addition to the PolyForm Strict License 1.0.0 terms below, the licensor
 grants BQP and its employees permission to use the software solely to
-evaluate it internally, from the date of delivery until **2026-12-31**. This
-additional permission does not extend the copyright license beyond use: no
-distribution outside BQP, no changes or new works based on the software, no
-commercial or production use, and no sublicensing or transfer. Every other
-term below applies unchanged. The licensor may extend this period in writing.
+evaluate it internally, from the date of delivery until 2026-12-31. This
+additional permission does not extend the copyright license beyond use. It
+allows no distribution outside BQP, no changes or new works based on the
+software, no commercial or production use, and no sublicensing or transfer.
+Every other term below applies unchanged. The licensor may extend this period
+in writing.
 
 Contact: Truman DeWalch, trumandewalch@gmail.com
 

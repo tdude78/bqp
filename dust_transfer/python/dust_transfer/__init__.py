@@ -2,7 +2,7 @@
 # Licensed under the PolyForm Strict License 1.0.0 with the additional
 # evaluation permission stated in LICENSE.md. Use only; no changes, no
 # distribution, no commercial use. This is dust_transfer MVP 0.1.0.
-"""dust_transfer — two-phase orbital transfer optimizer + high-fidelity propagator.
+"""dust_transfer: a two-phase orbital transfer optimizer and a high-fidelity propagator.
 
 Units everywhere: km, km/s, seconds, Julian Date (UTC).
 

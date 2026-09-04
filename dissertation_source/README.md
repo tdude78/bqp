@@ -1,10 +1,11 @@
-# Dissertation draft — LaTeX source
+# Dissertation draft, LaTeX source
 
-Draft dissertation (Truman DeWalch). The compiled PDF is `dissertation_dewalch.pdf`
-(also at `../dissertation_dewalch_draft.pdf`).
+This is the draft dissertation by Truman DeWalch. The compiled PDF is
+`dissertation_dewalch.pdf` here and `../dissertation_dewalch_draft.pdf` at the
+bundle root.
 
-Rebuild with `./build_pdf.sh` (needs a TeX Live install with `latexmk`, `biber`
-and `makeglossaries`), or `latexmk -pdf main.tex`.
+Rebuild it with `./build_pdf.sh`, which needs a TeX Live install with
+`latexmk`, `biber` and `makeglossaries`, or run `latexmk -pdf main.tex`.
 
-This is an unpublished draft provided for BQP's evaluation only: not for
-distribution or citation. Copyright 2026 Truman DeWalch; see `../LICENSE.md`.
+The draft is unpublished and is provided for BQP's evaluation only. Please do
+not distribute or cite it. Copyright 2026 Truman DeWalch; see `../LICENSE.md`.

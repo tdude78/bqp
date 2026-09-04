@@ -6,16 +6,19 @@
 //! Python bindings for the two-phase transfer optimizer and the Lightyear
 //! high-fidelity propagator.
 //!
-//! Three things are exposed:
+//! Three things are exposed.
 //!
-//! * [`propagate`] / [`propagate_final`] — high-fidelity (Encke, spherical-harmonic gravity + JB2008
-//!   drag + SRP + Sun/Moon) propagation of one ECI state.
-//! * [`TransferProblem`] — the two-phase (phasing + Lambert transfer) intercept
-//!   optimizer. `solve()` returns the Pareto front of candidates; `replay()`
-//!   and `hf_verify()` re-fly one candidate under the medium-fidelity (J2) and
-//!   high-fidelity models respectively.
-//! * `kep_to_eci` / `eci_to_kep` — small element conversions so callers do not
-//!   need another library to build a state.
+//! [`propagate`] and [`propagate_final`] run the high-fidelity propagator
+//! (Encke formulation, spherical-harmonic gravity, JB2008 drag, SRP, Sun and
+//! Moon) on one ECI state.
+//!
+//! [`TransferProblem`] is the two-phase intercept optimizer (phasing plus a
+//! Lambert transfer). `solve()` returns the Pareto front of candidates;
+//! `replay()` re-flies one candidate under the medium-fidelity J2 model and
+//! `hf_verify()` under the high-fidelity model.
+//!
+//! `kep_to_eci` and `eci_to_kep` are small element conversions so callers do
+//! not need another library to build a state.
 //!
 //! Units everywhere: km, km/s, seconds, Julian Date (UTC).
 
@@ -507,7 +510,7 @@ fn candidate_from_py(d: &Bound<'_, PyDict>) -> PyResult<PlanResult> {
     Ok(c)
 }
 
-/// One deployer→target intercept problem.
+/// One deployer-to-target intercept problem.
 ///
 /// Construct with the two ECI states at a common epoch, then call `solve()`.
 /// Defaults are the campaign's sealed MF-transfer controls.
