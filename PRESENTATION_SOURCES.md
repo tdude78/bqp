@@ -1,9 +1,9 @@
 # Sources for the BQP space domain awareness presentation
 
-This is the reference list for the presentation delivered to BQP, compiled by
-auditing the deck source (`presentation.tex`, 32 pages: title, 13 numbered
+This is the reference list for the presentation I gave to BQP. I built it by
+auditing the deck source (`presentation.tex`, 32 pages: a title, 13 numbered
 content slides, a closing statement, a backup divider, and 16 discussion
-backups) together with the research notes behind it.
+backups) alongside the research notes behind it.
 
 Part 1 lists the 47 sources the deck actually cites, with the slides that use
 each one, the claim it supports, and the qualification that travels with that
@@ -12,12 +12,12 @@ but not cited on a slide.
 
 Everything here is third-party public material. The links point to the
 publishers, who own the works. Nothing in this file is a BQP performance claim
-or a claim about the author's own work.
+or a claim about my own work.
 
-Compiled 2026-09-03. Sources were last verified live on 2026-08-31 during the
-deck closeout, and the citations themselves were re-checked against publisher
-records on 2026-09-03. One deck link is now dead and two citations needed
-correcting; see "Verification record" at the end.
+Compiled 2026-09-03. I last checked the sources live on 2026-08-31 during the
+deck closeout, and re-checked the citations themselves against publisher
+records on 2026-09-03. One deck link has since died and two citations needed
+correcting. The verification record at the end has the detail.
 
 ## How to read the entries
 
@@ -30,8 +30,8 @@ labels carry over here:
 - **Study** is a peer-reviewed paper or a conference technical paper.
 - **Preprint** is a paper that has not completed peer review.
 - **Secondary** is a credible report that does not supply the underlying record.
-- **Derived** is the presenter's own analysis, proposal, or arithmetic, and is
-  not sourced to anyone else.
+- **Derived** is my own analysis, proposal, or arithmetic, and is not sourced
+  to anyone else.
 
 A claim marked as a study result is never a claim about BQP's performance.
 Several entries below carry an explicit qualification for exactly that reason.
@@ -52,7 +52,7 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* roughly 1.2 million debris objects between 1 and 10 cm; the catalogued-object history in Figure 2.1 exceeding 40,000 objects; and, in backup, a business-as-usual 200-year risk index about four times the reference sustainability threshold.  
 *Qualification:* the Figure 2.1 series is limited by surveillance capability and uses ESA object classes. It is neither the DISCOS tracked count nor the 1 to 10 cm estimate. The risk index is a projection, not measured current risk. Reuse of the figure is personal and non-commercial with source and issue-date credit.
 
-**Mashiku, A., Newman, L., and Highsmith, D. (2025). "NASA Conjunction Assessment Risk Analysis (CARA) Compendium for Artificial Intelligence and Machine Learning for Satellite Collision Avoidance".** AMOS 2025 Technical Papers, DOI 10.64861/HKAM1019, <https://doi.org/10.64861/HKAM1019>. **The link used in the deck is dead; see the corrections section.**  
+**Mashiku, A., Newman, L., and Highsmith, D. (2025). "NASA Conjunction Assessment Risk Analysis (CARA) Compendium for Artificial Intelligence and Machine Learning for Satellite Collision Avoidance".** AMOS 2025 Technical Papers, DOI 10.64861/HKAM1019, <https://doi.org/10.64861/HKAM1019>. The link the deck uses for this paper is dead. See the corrections section.  
 *Slides:* Trust is a measured operating property; Backup: benchmark protocol.  
 *Supports:* operational trust depends on state accuracy, covariance realism, screening behaviour, and safe handling outside the training distribution. The reviewed LSTM example had 27 high-risk events among 782 total, with 211 m average and 2,480 m maximum miss-distance prediction error at an average 1.8 days to time of closest approach. The paper concludes that fully automated AI/ML operational risk assessment is not currently viable and favours hybrid approaches plus covariance realism.  
 *Qualification:* study data, not BQP performance. The architecture the deck proposes is informed by CARA, not prescribed by NASA.
@@ -277,9 +277,9 @@ Several entries below carry an explicit qualification for exactly that reason.
 
 # Part 2: background research corpus
 
-These 204 sources were consulted while building the deck and are recorded in
-the research notes, but no slide cites them. They are listed by topic with the
-publisher's own title or identifier. No claim in the deck rests on them.
+I consulted these 204 sources while building the deck and recorded them in the
+research notes, but no slide cites them. They appear here by topic, under the
+publisher's own title or identifier. No claim in the deck rests on any of them.
 
 ### Orbit propagation state of the art
 
@@ -539,7 +539,7 @@ directory) records the checks behind these citations. In summary:
 - A final link check covered 26 unique deck URLs. Twenty-five returned HTTP
   200. The Space Systems Command UDL article returned HTTP 403 to the automated
   client, which is consistent with site access control rather than a dead page.
-- The two ESA PDFs were downloaded and passed a `qpdf --check` integrity test,
+- Both ESA PDFs downloaded cleanly and passed a `qpdf --check` integrity test,
   as did the AMOS 2023 paper.
 - Live re-reads on 31 August confirmed the ESA tracked-object count and update
   date, the Gannon storm qualification, the Kayhan machine-to-machine claim,
@@ -548,14 +548,14 @@ directory) records the checks behind these citations. In summary:
 
 ## Corrections found while compiling this list
 
-Publisher records were re-checked on 2026-09-03 while writing these entries.
+I re-checked the publisher records on 2026-09-03 while writing these entries.
 Two citations in the deck's own notes need correcting, and the corrected form
 is what appears above.
 
-- The Gannon storm paper is Journal of Spacecraft and Rockets **61(5)**, pages
+- The Gannon storm paper is Journal of Spacecraft and Rockets 61(5), pages
   1412 to 1416. The deck's claim ledger records it as 61(6). The volume, year
   and content are unaffected.
-- The control-distance-metric paper has **three** authors: Holzinger, Scheeres
+- The control-distance-metric paper has three authors: Holzinger, Scheeres
   and Alfriend, Journal of Guidance, Control, and Dynamics 35(4), 1312 to 1325,
   2012. The deck cites it as "Holzinger and Scheeres".
 
@@ -584,8 +584,8 @@ results, preprints, or company-reported stay that way.
 
 # Referenced without a link
 
-**DoD Directive 3000.09, Autonomy in Weapon Systems.** named on the authority  
-backup slide only to state what it does *not* do: it is not a blanket rule for
+**DoD Directive 3000.09, Autonomy in Weapon Systems.** The authority backup
+slide names this only to say what it does not do. It is not a blanket rule for
 non-weapon collision avoidance.
 
 # Where these came from
