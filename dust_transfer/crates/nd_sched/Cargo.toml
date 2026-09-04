@@ -1,0 +1,27 @@
+[package]
+name = "nd_sched"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+description = "Concurrency core: one global thread pool, deterministic seed-folding, flat work-unit scheduling, and cross-cell backlog for the NASA Dust optimizer."
+
+[lib]
+crate-type = ["rlib"]  # Internal crate only, no Python bindings.
+
+[dependencies]
+anyhow = { workspace = true }
+# Single global rayon pool + all data-parallel primitives.
+rayon = { workspace = true }
+# Cheap, poison-free mutexes for instrumentation stores.
+parking_lot = { workspace = true }
+nd_runtime_trace = { workspace = true }
+
+[dev-dependencies]
+# Banned-pattern lint walks and parses all workspace crate sources.
+walkdir = { workspace = true }
+syn = { version = "2", features = ["full", "visit"] }
+serde_json = { workspace = true }
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

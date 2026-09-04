@@ -1,0 +1,36 @@
+{
+  "schema": "part_a_gravity_coefficients_reference_v1",
+  "coefficient_file": "GO_CONS_GCF_2_DIR_R6_d15.txt",
+  "size_bytes": 7830,
+  "sha256": "983f035818399f9cb27f1e8c604cb62b3e72d650aa4cbfadb31b1e7c4fe61f09",
+  "maximum_degree": 15,
+  "maximum_order": 15,
+  "runtime_part_a_degree": 5,
+  "runtime_part_a_order": 5,
+  "coefficient_columns": [
+    "degree",
+    "order",
+    "C",
+    "S"
+  ],
+  "source_model": "GO_CONS_EGM_GOC_2__20091009T000000_20131020T235959_0201",
+  "source_release": "DIR-R6",
+  "source_doi": "10.5880/ICGEM.2019.004",
+  "source_reference_epoch": "2010-09-01",
+  "normalization": "fully_normalized",
+  "tide_system": "tide_free",
+  "source_gm_m3_s2": "3.986004415e14",
+  "source_reference_radius_m": "6378136.46",
+  "source_payload": {
+    "path": "assets/reference/gravity/dir_r6/GO_CONS_GCF_2_DIR_R6.gfc",
+    "size_bytes": 3370005,
+    "sha256": "4da4a476418553c2243c0dbc79515bb3a419f3175dea3e38c58843cb14fcff7b"
+  },
+  "oracle_fixture": {
+    "path": "crates/lightyear_odeint_rs/tests/data/orekit_dir_r6_5x5_v1.json",
+    "size_bytes": 3412,
+    "sha256": "670da646c07ad1e303ab8b6cb23820c02832f6162f34f8f7402fe1212227a379",
+    "semantic_sha256": "022e07c17ea3d454e9a61a52cbf04731044781e7fbfc3e0534fdaa956b893dbf"
+  },
+  "authority_status": "sealed_dir_r6_source_derived_and_orekit_conformance"
+}

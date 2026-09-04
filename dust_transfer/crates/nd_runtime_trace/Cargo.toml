@@ -1,0 +1,23 @@
+[package]
+name = "nd_runtime_trace"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+description = "Lossy non-authoritative runtime tracing for NASA Dust command coordinators."
+
+[lib]
+crate-type = ["rlib"]
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+libc = { workspace = true }
+rtrb = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

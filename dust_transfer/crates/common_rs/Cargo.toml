@@ -1,0 +1,18 @@
+[package]
+name = "common_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+description = "Shared numerical utilities and 6D types for orbital mechanics"
+
+[lib]
+crate-type = ["rlib"]  # Internal crate only, no Python bindings
+
+[dependencies]
+nalgebra = { workspace = true }
+
+[dev-dependencies]
+approx = { workspace = true }
+
+[lints]
+workspace = true

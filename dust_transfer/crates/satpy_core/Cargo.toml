@@ -1,0 +1,86 @@
+[[bench]]
+name = "timescale_bench"
+harness = false
+
+[[bench]]
+name = "propagation_bench"
+harness = false
+
+[[bench]]
+name = "autodiff_comparison"
+harness = false
+required-features = ["autodiff"]
+
+[[bench]]
+name = "simd_bench"
+harness = false
+
+[[bench]]
+name = "rayon_overhead_bench"
+harness = false
+required-features = ["parallel"]
+
+[package]
+name = "satpy_core"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+
+[lib]
+name = "satpy_core"
+crate-type = [ "rlib",]
+
+[features]
+parallel = [ "dep:rayon",]
+# `legendre-probe` RETIRED (2026-08-20): the fill counter it gated (and the
+# forwarder carrying its record hook) are deleted; callers enter
+# `legendre_vw_dispatch` directly. Fills-per-arc was measured and recorded.
+autodiff = []  # DualVec automatic differentiation (enables L-BFGS, Newton's method)
+
+default = [ "parallel", "autodiff" ]
+
+[dev-dependencies]
+criterion = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+
+[dependencies.common_rs]
+workspace = true
+
+[dependencies.nd_sched]
+workspace = true
+
+[dependencies.nalgebra]
+workspace = true
+
+[dependencies.num-traits]
+workspace = true
+
+[dependencies.rayon]
+workspace = true
+optional = true
+
+[dependencies.sha2]
+workspace = true
+
+[dependencies.wide]
+workspace = true
+
+[build-dependencies]
+anyhow = { workspace = true }
+
+[dependencies.anyhow]
+workspace = true
+
+# blas-src / openblas-src commented out: Accelerate is linked but never called
+# (no Array2::dot() anywhere; all matrix ops use nalgebra or hand-coded SIMD).
+# Re-enable if BLAS matmul is introduced. See Item B8 in perf audit.
+# [target.'cfg(target_os = "macos")'.dependencies]
+# blas-src = { version = "0.14", features = ["accelerate"] }
+
+# [target.'cfg(target_os = "linux")'.dependencies]
+# blas-src = { version = "0.14", features = ["openblas"] }
+# openblas-src = { version = "0.10.15", features = ["cblas", "system"] }
+
+[lints]
+workspace = true

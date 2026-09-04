@@ -1,0 +1,243 @@
+\documentclass[doublespace]{VTthesis}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{footnpag} % make footnote symbols restart on each page
+\usepackage{siunitx}
+\usepackage{float}
+\usepackage{enumitem}
+% VTthesis may predefine \thealgorithm; avoid package redefinition warnings.
+\makeatletter
+\@ifundefined{thealgorithm}{}{\let\thealgorithm\relax}
+\makeatother
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{tabularx}
+\usepackage{silence}
+% silence keys LaTeX kernel warnings under the lowercase "latex" family.
+\WarningFilter{latex}{Command \showhyphens}
+\usepackage{microtype}
+% Robust URL line breaking
+\usepackage{xurl}
+\usepackage[capitalise,nameinlink,noabbrev]{cleveref}
+\usepackage[acronym,nomain,toc]{glossaries}
+
+% --- Draft stamping -------------------------------------------------------
+% One place to change the draft date, or to remove draft marking entirely:
+% delete this block and the two \ApplyDraftStamp calls after \frontmatter and
+% \mainmatter below.
+\newcommand{\DraftDate}{September 2026}
+% Cover-page watermark only (firstpage): light, rotated, behind the title text.
+\usepackage[firstpage]{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{0.72}
+\SetWatermarkLightness{0.82}
+% Running stamp: small, gray, outer footer corner, so it never collides with
+% the page number (header outer in main matter, footer centre elsewhere).
+\newcommand{\DraftStamp}{\textcolor{black!45}{\footnotesize\textsf{DRAFT\hspace{0.6em}\DraftDate}}}
+\newcommand{\ApplyDraftStamp}{%
+  \fancyfoot[LE,RO]{\DraftStamp}%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyfoot[C]{\thepage}%
+    \fancyfoot[LE,RO]{\DraftStamp}%
+    \renewcommand{\headrulewidth}{0pt}%
+  }%
+}
+% --------------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+  pdftitle={Optimization Under Uncertainty for Space-Based Just-in-Time Collision Avoidance},
+  pdfauthor={Truman R. DeWalch},
+  pdfsubject={Dissertation in Aerospace Engineering},
+  pdfkeywords={Orbital Debris, Just-in-Time Collision Avoidance, Constellation Design, Stochastic Optimization, Robust Multiobjective Optimization}
+}
+% Allow gentle breaks within long URLs
+\Urlmuskip=0mu plus 1mu
+% Ensure compact, numeric bracketed citations typical in AOE/AIAA
+% VTthesis loads natbib with [numbers,sort]; compress ranges for clarity
+\setcitestyle{numbers,sort&compress}
+
+% Keep algorithm bookmarks and line anchors unique under hyperref.
+\makeatletter
+\providecommand*{\toclevel@algorithm}{0}
+\@ifundefined{theHALG@line}
+  {\newcommand*{\theHALG@line}{\thealgorithm.\arabic{ALG@line}}}
+  {\renewcommand*{\theHALG@line}{\thealgorithm.\arabic{ALG@line}}}
+\makeatother
+
+% Keep dissertation builds self-contained for Overleaf syncs.
+\graphicspath{{figs/}}
+
+% siunitx configuration for aerospace usage (updated for v3.x compatibility)
+\sisetup{mode=match,propagate-math-font=true,reset-math-version=false,reset-text-family=false,reset-text-series=false,reset-text-shape=false,text-family-to-math=true,text-series-to-math=true,per-mode=symbol,group-separator=\,,uncertainty-mode=separate}
+
+% Editorial table system
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.14}
+\captionsetup[table]{
+  font=small,
+  labelfont=bf,
+  textfont=normalfont,
+  skip=4pt,
+  justification=raggedright,
+  singlelinecheck=false
+}
+
+% Page and float spacing: reduce underfull vbox incidents without affecting layout
+\raggedbottom
+\setlength{\textfloatsep}{12pt plus 4pt minus 2pt}
+\setlength{\floatsep}{12pt plus 4pt minus 2pt}
+\setlength{\intextsep}{10pt plus 3pt minus 2pt}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.78}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.8}
+\setlength{\emergencystretch}{1em}
+\hyphenation{col-li-sion col-li-sions}
+\hbadness=10000
+\floatplacement{figure}{!htbp}
+\floatplacement{table}{!htbp}
+% TeX Live basic on this machine does not ship placeins.sty; use a simple
+% local barrier so section-level float clusters are still flushed before the
+% manuscript moves on.
+\newcommand{\FloatBarrier}{\clearpage}
+
+\newglossary[slg]{symbolslist}{syi}{syg}{List of Symbols}
+\makeglossaries
+\setacronymstyle{long-short}
+
+\newglossarystyle{symbols-long}{%
+  \setglossarystyle{long}%
+  \renewcommand*{\glossaryentrynumbers}[1]{}%
+}
+
+% Prevent hyperref bookmark warnings from glossary macros in moving arguments.
+\pdfstringdefDisableCommands{%
+  \def\gls#1{#1}%
+  \def\Gls#1{#1}%
+  \def\glspl#1{#1}%
+  \def\Glspl#1{#1}%
+}
+
+\newcommand{\TitlePageStatusMark}{}
+
+
+\input{macros}
+\input{acronyms}
+\input{symbols}
+
+\numberwithin{equation}{chapter}
+
+% Title of your thesis
+\title{Optimization Under Uncertainty for Space-Based Just-in-Time Collision Avoidance}
+
+% You should include 3-5 keywords, separated by commas
+\keywords{Orbital Debris, Just-in-Time Collision Avoidance, Constellation Design, Stochastic Optimization, Robust Multiobjective Optimization}
+% \keywords{Some Keywords, Subject matter, etc.}
+
+% Your name, including middle initial(s)
+\author{Truman R. DeWalch}
+
+% Change this to your program, e.g. Physics, Civil Engineering, etc.
+\program{Aerospace Engineering}
+
+% Change this to your degree, e.g. Master of Science, Master of Art, etc.
+\degree{Doctor of Philosophy}
+
+% This should be your defense date:
+\submitdate{May 15, 2026}
+
+% Committee members. Only have five readers and one chair available.
+% Only use the ones you need and don't include the ones you don't need.
+% You can also declare a Co-advisor. Per the VT ETD standards, 
+% you should not include titles such as Dr. or Professor, but can list educational 
+% qualifications after the name (i.e., John Doe, MFA or Jane Smith, PhD)
+% Names should appear as they do in ESS/Banner/HokieSpa, including middle initials.
+\principaladvisor{Riley M. Fitzgerald}
+\firstreader{Scott England}
+\secondreader{Shane Ross}
+\thirdreader{Kevin Schroeder}
+
+% The dedication and acknowledgement pages are optional.
+
+% The abstract is required.
+\long\gdef\myabstracttext{
+Orbital debris in low Earth orbit poses a growing system-level risk: rare but catastrophic debris-debris collisions can generate long-lived fragment populations and raise future collision rates. This dissertation studies a complementary mitigation concept, dust-enabled just-in-time collision avoidance, in which targeted dust releases are designed to impart small momentum changes before closest approach. The mission is posed as an optimization-under-uncertainty problem with explicit service-reliability requirements and mission-resource tradeoffs. Operational post-intervention conjunction-risk reduction is outside the current validated evidence scope.
+
+The dissertation makes four concrete contributions. It defines a catalogue-grounded hazardous-event workflow in which conjunction evidence, screened from hash-pinned catalogue captures into reusable event banks, is treated as a design input rather than an afterthought. It formulates dust-enabled just-in-time collision avoidance as a deployer-architecture problem, coupling transfer feasibility, dust-mass logic, and mission reliability against physically screened conjunction opportunities. It develops a layered uncertainty-propagation and scoring framework, enabled by a custom multi-method Rust propagator using Battin's numerically stable Encke formulation, with explicit epoch and body-role fidelity assignment: the search lane screens transfers under mean-element \(J_2\) physics, the hybrid lane requires high-fidelity transfer correction, and blinded canonical replay carries its own strict authority. Finally, it compares three constellation families across six optimizer methods under common-random-number evidence control: Beta-posterior and \gls{hpd} diagnostics control adaptive search, while canonical reporting is designed to certify 58 of 64 unsafe scenarios through a reconstructed nondominated maneuver--released-mass front. Optimizer evidence is common-random-number aligned and descriptive; it supplies one realization per cell rather than paired replicates, and the protocol permits no global or per-family optimizer winner. Current attainment, atmosphere-model, and probability-qualified released-mass claims remain held until a campaign sealed under the current compiled science authority and receipt chain is independently reconstructed. Dust-covariance transport uses one Gaussian propagated by the seven-point Julier minimal-skew simplex \gls{ut} rule, with fixed spherical-equivalent dust physics shared by all sigma points; the compiled mixture-split controls remain dormant and form no child components. That combination defines the transfer and coverage evidence required for defensible future results.
+
+In short, the dissertation asks when dust-enabled nudging is feasible, what it costs in maneuver and released mass, and what safeguards and limitations bound its use as a possible complement to existing debris-risk management.
+}
+
+\long\gdef\myabstractgenaudtext{
+Earth orbit is crowded with thousands of human-made objects. Most are inactive satellites or small fragments from past missions and breakups. Although each piece is tiny compared to a spacecraft, a high-speed collision can create thousands more fragments, making the problem worse for everyone who relies on space services. This study examines one way to lower the chance of the rare, dangerous encounters that cause the most harm.
+
+The basic idea is simple: release a small cloud of dust at the right place and time so that a risky object receives a very small nudge. The method tests whether that nudge changes predicted encounter geometry; it does not yet establish operational post-intervention risk reduction. Turning that idea into a workable system requires practical answers. Where should the service satellites orbit to reach likely trouble spots quickly? How much dust should be released, and how should it spread out? How should decisions be made when knowledge of object positions is imperfect and still improving?
+
+The study uses computer models to define comparisons among strategies and optimization methods, asking which designs can respond quickly without demanding too much dust or maneuvering. Current quantitative conclusions remain on hold until an independent group can rebuild one full campaign from the archived record and obtain the same numbers. The methodology identifies safeguards and limitations that would matter before any real-world use, including careful monitoring of possible secondary hazards.
+}
+
+% The abstract is required.
+\abstract{\myabstracttext}
+
+% The general audience abstract is required. There are currently no word limits.
+\abstractgenaud{\myabstractgenaudtext}
+
+\begin{document}
+% The following lines set up the front matter of your thesis or dissertation and are required to ensure proper formatting per the VT ETD standards. 
+\frontmatter
+\ApplyDraftStamp
+\TitlePageStatusMark
+\maketitle
+\tableofcontents
+
+% The list of figures and tables are now optional per the official ETD standards.  Unless you have a very good reason for removing them, you should leave these lists in the document. Comment them out to remove them.
+\listoffigures
+\listoftables
+\clearpage
+\printglossary[type=\acronymtype,title=List of Abbreviations,toctitle=List of Abbreviations]
+
+\glsaddall[types={symbolslist}]
+\printglossary[type=symbolslist,style=symbols-long,nonumberlist,title=List of Symbols,toctitle=List of Symbols]
+% Relax line breaking in bibliography only (helps with long URLs)
+\AtBeginEnvironment{thebibliography}{\sloppy}
+
+% The following sets up the document for the main part of the thesis or dissertation. Do not comment out or remove this line.
+\mainmatter
+\ApplyDraftStamp
+\glsresetall
+
+\input{chapters/1_introduction}
+\input{chapters/2_literature_review}
+\input{chapters/3_methodology}
+\input{chapters/4_results}
+\input{chapters/5_discussion}
+\input{chapters/6_conclusions}
+% Chapter 7 is retained as a short synthesis chapter so the dissertation ends
+% on the contribution chain and forward-looking boundaries, rather than
+% on administrative manuscript status alone.
+\input{chapters/7_summary}
+
+\bibliography{bib}
+\bibliographystyle{plainnat}   
+
+\appendix
+\begin{appendices}
+    \input{appendices/A_supplementary_dust_covariance}
+\end{appendices}
+
+\end{document}

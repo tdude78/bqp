@@ -1,0 +1,718 @@
+# NOT THE PART A PRODUCTION SHAPE, despite the filename and `role: production`.
+# This is a config-LOADING fixture: its values are frozen so the loader's
+# behaviour is testable, and they are deliberately NOT tracked to the sealed
+# campaign authority. They already differ from it.
+#
+# No sealed value is restated here on purpose. A literal in this header would
+# have no reader and no gate, so it would decay at the next reseal and mislead
+# whoever trusted it -- which is the failure this warning exists to prevent, and
+# which two comments in this tree have already committed.
+#
+# Read it as "a valid production-role config", never as "what the campaign
+# runs". Anything sizing or profiling the campaign must read the compiled
+# authority instead; two harnesses have already been caught profiling a config
+# the campaign stopped flying, both because a name promised currency that the
+# contents did not carry.
+config:
+  version: 1
+  role: production
+  profile: hybrid
+tc:
+  defaults:
+    cargo_profile: release-fast
+    rust_ext_dir: build/rust/lib_rust/release-fast
+    wall_time: auto
+    node_packing: width
+    pack_width: auto
+    pack_mem_per_case_gb: 8
+    pack_max_cpus_per_job: 60
+    # TC width ladders (2026-06-30, jobs 6140161/6140174/6140199/6140215/6140232):
+    # w2 is the chosen CPU/wall knee: near-w1 CPU cost with ~2x lower wall; w4
+    # remains latency-only. 60 CPU bins keep cap2 packs below TC's 250G node memory.
+    pack_worker_cap: 2
+    mf_hybrid:
+      nfev_budget: 2300
+    perf_gate:
+      cpus: 8
+      mem: 20G
+      time: "00:35:00"
+beta_box_point_fraction: 0.9
+constants:
+  jd_standard: 2459713.079861111
+  solar_cycle_anchor_jd:
+    min: 2458792.0
+    mean: 2459612.0
+    max: 2460126.0
+timing:
+  min_lead_time_s: 21600
+  max_transfer_solver_time_s: 172800
+timeline:
+  contract_version: 2
+  artifact_provenance: timeline_v2
+  constellation_epoch_jd: auto
+  jd_rebase_policy: 'off'
+catalogue:
+  target_events: 500
+  selection_policy: risk_weighted
+  natural_pair_moid_threshold_km: 50.0
+  final_target_miss_km: 0.025
+  final_accept_miss_km: 0.10
+  distance_threshold_km: 0.025
+  orbit_proximity_threshold_km: 50.0
+  event_rewind_days: 3.0
+  event_span_days: 182.5
+  default_day_range: 7.0
+  default_max_objects: 250
+  min_object_mass_kg: 10.0
+  risk_weighting:
+    flux_model: analytical_ordem
+    selection_temperature: 0.5
+    component_clip: [0.5, 3.0]
+    miss_clip: [1.0, 3.0]
+    flux_exponent: 1.0
+    area_exponent: 0.5
+    mass_exponent: 0.25
+    relative_velocity_exponent: 0.25
+    miss_exponent: 1.0
+  nudge_bounds:
+    sma_max_delta_km: 10.0
+    ecc_max_delta: 0.001
+    inc_max_delta_rad: 0.01
+    argp_max_delta_rad: 0.1
+    raan_max_delta_rad: 0.1
+  window_before_days: 2.625
+  window_after_days: 0.25
+  parallel:
+    bin_workers: 6
+    orbit_screen_mode: auto
+    orbit_screen_workers: 6
+    orbit_screen_chunk_size: 256
+    mix_policy: none
+    max_total_threads: 20
+solver:
+  max_phase_dv: 1.25
+  max_transfer_dv: 1.25
+  # Deep "v2" transfer-search solver (re-landed 2026-06-18; re-applies commit
+  # 9afe5f7e faithfully -- revolution_cap left at 2.0). Equal-wall A/B B1/B2/B3
+  # (memory mf-hybrid-perf-pushed): deep at a CUT --nfev-budget strictly beats
+  # the prior fast solver -- +11.1% HV at -20% wall at production events (ev32),
+  # growing with budget; deep HV plateaus by ~nfev1800. IMPORTANT: pair with a
+  # CUT --nfev-budget (~3.5x fewer evals) for the equal-wall win; at FULL nfev
+  # the deep solver runs ~3.7x slower per eval. See AGENTS.md campaign checklist.
+  max_revs: 4
+  picks_to_verify: 8
+  # Search keeps bounded proxy screening; publishable replay attempts all pairs.
+  final_replay_picks_to_verify: 0
+  distance_tol: 0.025
+  deployer_min_distance: 0.12
+  revolution_cap: 2.0
+  min_perigee_altitude_km: 200.0
+  max_apogee_altitude_km: 35000.0
+  tof_sample_budget: 256
+  coarse_early_stop: false
+  fine_total_limit: 10
+  coarse_reject_margin_km_s: 0.15
+  seed_fine_margin_km_s: 0.15
+  pair_proxy_model: sum
+  # TC hybrid w8 smoke (2026-06-30, jobs 6139848/6139852/6139857):
+  # 1.27-1.65x faster wall/core; strict hash identity on seed2 nsga2 + rnsde,
+  # seed1 nsga2 front hash differs only by dropping a worse-CV duplicate row.
+  oxymoo_policy: fast_population20_generations3_initial_best1
+  delta_v_anchor_policy: full
+  # nd_epsilon promoted 2026-07-02 (TC campaigns ndeps_promo_main3 + ndeps_promo_confirm,
+  # jobs 6168816/6168817): nsga2/walker/ev32/pop24/nfev2000 x8 seeds = 1.50x evals/s at
+  # HV +2.7% vs full; rnsde x4 seeds (stacked w/ anchor no_probes) 1.82x at HV +2.2%.
+  # no_probes itself passed (1.16x, HV -0.07%) but stays opt-in: the stacked combo
+  # collapsed to a 1-row front on 1/8 nsga2 seeds (recovery preflight kill).
+  polish_scope_policy: nd_epsilon
+transfer:
+  j2_max_iterations: 5
+  j2_endpoint_target_m: 10.0
+  j2_correction_gain: 1.0
+  dissertation_speed_mode: balanced
+  final_evaluation_fidelity: hf
+  final_candidate_pruning: none
+  max_front_mass_candidates_per_event: 10000
+  hf_dust_fix_max_iterations: 4
+  hf_dust_fix_target_m: 10.0
+physics:
+  kappa: 1.0
+  kappa_authority: baseline_current_monotone_direct_momentum_model_only
+  hit_probability: 0.99
+  min_miss_distance_km: 1.0
+  dust_pos_sigma_in_track_m: 2.5
+  dust_pos_sigma_radial_cross_track_m: 1.25
+  dust_vel_sigma_in_track_mps: 0.08272485141713586
+  dust_vel_sigma_radial_cross_track_mps: 0.040894506197059824
+  dust_Am_ratio_m2kg: 1.948
+  dust_grain_diameter_m: 4.0e-05
+  dust_material_density_kg_m3: 19250.0
+  capture_grains_per_independent_packet: 1
+  mass_capture_count_model: finite_binomial_chernoff
+  dust_CD: 2.2
+  dust_CR: 1.3
+  target_pos_sigma_m: 100.0
+  trackable_target_pos_sigma_m: 100.0
+  target_pos_radial_axis_ratio: 0.1
+  target_pos_cross_track_axis_ratio: 0.2
+  target_vel_sigma_m: 0.1
+  target_covariance_epoch: intercept
+  target_cross_covariance_scope: zero_dust_target
+  target_velocity_sigma_role: inert_fixed_time_2d_pc
+  hf_sigma_failure_mode: fail
+  detmass_policy: hf_strict_unsafe_only
+  min_practical_deterministic_mass_kg: 5.0e-07
+  require_hf_transfer_correction: true
+  hf_correction_ratio_bounds:
+  - 0.7
+  - 1.3
+  deterministic_mass_solver:
+    xtol_kg: 1.0e-06
+    # rtol is an absolute kilometre tolerance on the miss-distance residual:
+    # it scales max(target, 1) and every target in this corpus is under 1 km.
+    # 1.0e-06 was one millimetre, under a trajectory accurate to 1.2 cm.
+    # Derivation for 1.0e-05 lives at SolverConfig::default in mass_solver.rs.
+    rtol: 1.0e-05
+    maxiter: 50
+    negative_mass_eps_kg: 1.0e-12
+  # Numerical mass sanity ceiling only; not canister payload capacity.
+  dust_hard_limit_kg: 1000.0
+  default_debris_mass_kg: 1200.0
+  default_debris_am_ratio_m2kg: 0.01
+  default_debris_area_m2: 12.0
+postprocess:
+  fix_ls_max_nfev: 100
+  fix_ls_tol: 1.0e-05
+  fix_ls_skip_tol: 1.0
+  mf_seed_bound_kms: 0.1
+  hf_refine_bound_kms: 1.0
+  mf_seed_reg_weight: 0.001
+  hf_refine_reg_weight: 0.0001
+  mf_seed_max_bound_expansions: 3
+  hf_refine_max_bound_expansions: 7
+  hybrid_mf_seed_hf_refine: true
+  dust_intercept_tol_km: 0.01
+  dust_radial_samples: 24
+  dust_angular_samples: 100
+  max_physical_dv_kms: 7.5
+  min_practical_dust_mass_kg: 0.01
+  conj_align_max_iter: 75
+  conj_align_tol_km: 0.1
+  conj_align_step_kms: 0.001
+  conj_align_max_dv_kms: 0.5
+  correction_mode: mf_seed_hf_refine
+dust:
+  ballistic_model: fixed_spherical_equivalent
+  gmm_components: 1
+  splitting_criterion: maxvar
+  alpha_policy: scaled
+  split_rank: 1
+  alignment_threshold: 1.0e-10
+  covariance_min_eigenvalue_km2: 1.0e-06
+  covariance_max_eigenvalue_km2: 1000000.0
+ukf:
+  alpha: 1.0
+  beta: 2.0
+  kappa_ukf: 0.0
+canister:
+  tof_fraction: 0.95
+  dust_phase_tof_s: 7200.0
+  # Fixed trajectory-reference ballistics; Pc dust mass never feeds back here.
+  # Study assumption only; report sensitivity before hardware claims.
+  ballistic_model: fixed_spherical_equivalent_uncoupled
+  scope: trajectory_reference_only
+  Am_ratio_m2kg: 0.01
+  CD: 2.2
+  CR: 1.3
+  # Timeline-v2 final evaluation enumerates this configured grid under HF.
+  tof_optimization:
+    enabled: true
+    method: grid
+    n_points: 4
+    lo: 0.0
+    hi: 0.95
+optimization:
+  transfer_dv_band:
+    low_km_s: 0.01
+    high_km_s: 0.3
+    penalty_weight: 0.5
+    policy: diagnostic_only
+  search_topology:
+    enabled: true
+    smooth_slack:
+      enabled: true
+      temperature: 0.05
+    continuation:
+      enabled: true
+      ramp_start: 0.0
+      ramp_end: 0.6
+      topology_scale_initial: 0.25
+    neighborhood:
+      enabled: false
+  execution:
+    events: 500
+    population_size: 64
+    generations: 200
+    nfev_budget: 2300
+    nfev_budget_policy: default
+    nfev_budget_source: configured:optimization.execution.nfev_budget
+    seed: 41128888  # distinct from DEFAULT_SEED (41127203) so tests can tell parse from fallback
+  termination:
+    mode: fixed
+  recovery_preflight: production
+  constellation:
+    schema_version: 2
+    family: walker
+    angle_bounds_deg:
+    - 0.0
+    - 360.0
+    walker:
+      sats_per_plane: 5
+      planes: 3
+      optimize_phasing: true
+      phasing_encoding: normalized_fraction
+      bounds:
+        altitude_km:
+        - 350.0
+        - 2000.0
+        inclination_deg:
+        - 0.5
+        - 165.0
+        planes:
+        - 2
+        - 8
+        sats_per_plane:
+        - 2
+        - 5
+        phasing_fraction:
+        - 0.0
+        - 0.999999
+      x0:
+      - 700.0
+      - 91.0
+      - 3.0
+      - 5.0
+      - 0.5
+      init_raan_deg: 0.0
+      init_mean_deg: 0.0
+    dual:
+      sats_per_plane:
+      - 5
+      - 5
+      planes:
+      - 3
+      - 3
+      optimize_phasing: true
+      phasing_encoding: normalized_fraction
+      optimize_shell_offsets: true
+      bounds:
+        altitude_1_km:
+        - 350.0
+        - 2000.0
+        altitude_2_km:
+        - 350.0
+        - 2000.0
+        inclination_1_deg:
+        - 0.5
+        - 165.0
+        inclination_2_deg:
+        - 0.5
+        - 165.0
+        planes_1:
+        - 2
+        - 4
+        sats_per_plane_1:
+        - 2
+        - 5
+        planes_2:
+        - 2
+        - 4
+        sats_per_plane_2:
+        - 2
+        - 5
+        phasing_fraction_1:
+        - 0.0
+        - 0.999999
+        phasing_fraction_2:
+        - 0.0
+        - 0.999999
+        raan_offset_2_deg:
+        - 0.0
+        - 359.999999
+        mean_offset_2_deg:
+        - 0.0
+        - 359.999999
+      x0:
+      - 550.0
+      - 700.0
+      - 91.0
+      - 63.0
+      - 3.0
+      - 5.0
+      - 3.0
+      - 5.0
+      - 0.5
+      - 0.5
+      - 0.0
+      - 0.0
+      init_raan_deg:
+      - 0.0
+      - 0.0
+      init_mean_deg:
+      - 0.0
+      - 0.0
+    flower:
+      bounds:
+        altitude_km:
+        - 350.0
+        - 2000.0
+        inclination_deg:
+        - 0.5
+        - 165.0
+        eccentricity:
+        - 0.0
+        - 0.3
+        arg_perigee_deg:
+        - 0.0
+        - 360.0
+        planes:
+        - 2
+        - 8
+        sats_per_plane:
+        - 2
+        - 5
+        combination_number:
+        - 0
+        - 7
+      x0:
+      - 700.0
+      - 98.0
+      - 0.05
+      - 0.0
+      - 3.0
+      - 5.0
+      - 1.0
+      repeat_days_max: 15
+      repeat_mu_max: 80
+      min_perigee_alt_km: 200.0
+      max_altitude_snap_error_km: 50.0
+      init_raan_deg: 0.0
+      init_mean_deg: 0.0
+  parallel:
+    # Pass 47: outer (was native since Pass 12.7). Pass 12.7's reason for native
+    # — "outer forced RAYON_NUM_THREADS=1, leaving the dominant Rust batch calls
+    # single-threaded (~150% CPU on 8 P-cores)" — was the nested-rayon bug:
+    # should_use_outer_batch_parallel lacked the current_num_threads()>1 guard,
+    # so the 8 Python ThreadPool workers each nested into_par_iter on the
+    # 1-thread rayon pool and blocked on a shared LockLatch (~66% of worker
+    # time). Fixed in f93051f6 (batch_eci.rs). With the fix, outer runs the HF
+    # population eval 8-way: occupancy 2.3 -> 7.46 cores, gen-1 17-27s -> 10.5s,
+    # determinism bit-exact (native == outer runtime_event_hash). NOTE: the
+    # +106% native A/B was mf-only (config_testing-era); it is not a basis for
+    # switching this HF production lane away from outer.
+    mode: outer
+    workers: 8
+    population_native_transfer: force
+    # Stage 8.4 promotion (2026-07-09): unified lease pool. Hash-identical across
+    # 7 optimizer families local + 2 TC shapes + mini-rehearsal 8/8 control-vs-
+    # candidate pairs (fallback 0). Wall: parity on walker family (per-eval native
+    # dominated), +18% on tree-shape TC probe (101.0 vs 123.0s, pop64 w64 e64).
+    # force engages only where budget > reserved pop workers; SMS w8 lanes are
+    # no-op by construction (budget==batch, verified on work_steal_sms arm).
+    scheduler: work_stealing
+    event_workers: auto
+    # Process-based population dispatch (2026-07-17): the free-threaded thread
+    # pool serializes on shared-object refcount/allocator contention (measured
+    # eval-width ~5.5 of 24 on EPYC); a persistent spawn pool at the archiver
+    # marshal map reaches width ~6.8 and 27.2 s/gen vs 61 thread (TC round-4
+    # A/B, 10 steady generations, 24 workers, 7.8 GB of the 32 GB budget).
+    # Thread-vs-process archived rows proven byte-identical (rows_hash
+    # 7f16d3cd/34079f8e; triple-parity gate). Fail-loud guard raises if the
+    # carrier is unavailable rather than silently downgrading to threads.
+    population_dispatch: process
+  robust:
+    quantile: 0.9
+    samples_per_ind: 1
+    samples_per_optimizer:
+      rnsde: 1
+      prnsde: 1
+      nsga2: 1
+      eps_nsga2: 1
+      sms_emoa: 1
+      age_moea2: 1
+      mopso: 1
+      sa: 1
+  archive:
+    enabled: true
+    max_size: 4096
+    # Large safety cap: preserve strict ND scientific front under normal runs,
+    # but stop runaway dominated-history growth.
+    history_max_size: 262144
+  canonical_replay:
+    enabled: true
+    required_for_reporting: true
+    event_scope: all
+    expected_event_count: 64
+    event_bank:
+      count: 64
+      selection_policy: catalogue_prefix
+    publication_estimand:
+      profile: finite_bank_q0p9_n64_k58_v1
+      q: 0.9
+      N: 64
+      k: 58
+    candidate_sources:
+    - external_archive
+    - final_population
+    deduplicate_by: phenotype
+    output_name: canonical_archive
+  output:
+    front:
+      mode: full_nondominated
+      constraint_tolerance: 0.01
+      objective_tolerance: 0.0
+      # Internal search provider only. required_for_reporting canonical replay
+      # supersedes this provisional source with canonical_archive.
+      final_front_source: external_archive
+    reporting:
+      pareto_dominance_space: constraint
+      front_summary_filter: none
+      front_rank_limit: 0
+      objective_tolerance: 0.0
+      supplemental_front:
+        enabled: false
+        mode: exact_ranked
+        rank_limit: 1
+        objective_tolerance: 0.0
+  algorithms:
+    defaults:
+      random_state: 41127203
+      crossover_prob: 0.9
+      mutation_prob:
+      - 0.5
+      - 1.0
+      eta_c: 15.0
+      eta_m: 20.0
+    rnsde:
+      cr:
+      - 0.2
+      - 0.9
+      f:
+      - 0.4
+      - 1.2
+      strategy: rand1exp
+      reinit_fraction: 0.1
+      reinit_generations: 25
+      enable_cache: false
+      # Option A cross-optimizer parity: disable RNSDE-unique diversity extras
+      # (elite local search, stagnation reinit, stagnation F/CR boost) so RNSDE
+      # shares only the common periodic-reinit + gap-fill with peers. Local
+      # refinement remains the defining feature of PRNSDE.
+      diversity_parity_mode: true
+      external_archive:
+        enabled: true
+        max_size: 512
+    nsga2:
+      mutation_prob: 0.2
+      eta_m: 30.0
+    prnsde:
+      reinit_fraction: 0.1
+      reinit_generations: 25
+    eps_nsga2:
+      reinit_fraction: 0.1
+      reinit_generations: 25
+    sms_emoa:
+      reinit_fraction: 0.1
+      reinit_generations: 25
+      # Batch A/B winner (2f70bd59): 1.56x evals/s vs steady-state batch=1 with
+      # HV mid-pack; b12-b24 plateau or fail HV. Promoted from current_config
+      # so TC campaign cells stop running batch=1 (sms gated matrix makespan
+      # at 3.4x the median family in the 8x4 campaign).
+      offspring_batch_size: 8
+    age_moea2:
+      reinit_fraction: 0.1
+      reinit_generations: 25
+    mopso:
+      reinit_fraction: 0.1
+      reinit_generations: 25
+    sa:
+      initial_temperature: 1.0
+      min_temperature: 0.0001
+      cooling_rate: 0.95
+      initial_sample_count: 1
+      max_sample_count: 1
+      sample_growth_power: 2.0
+      proposal_scale: 0.15
+      proposal_shrink: 0.5
+      scalarization: pareto_chebyshev
+      constraint_penalty: 1000000.0
+      reinit_fraction: 0.0
+      reinit_generations: 0
+  matrix:
+    seed_list:
+    - 41127203
+    - 41127204
+    - 41127205
+    - 41127206
+    - 41127207
+    - 41127208
+    - 41127209
+    - 41127210
+    - 41127211
+    - 41127212
+    - 41127213
+    - 41127214
+    - 41127215
+    - 41127216
+    - 41127217
+    - 41127218
+    replication:
+      profile: paired_seed_block_k16_v2
+      paired_seed_count: 16
+      completeness_policy: all_optimizer_family_seed_cells
+      analysis: paired_bootstrap_95_interval_and_directional_agreement_0p75_descriptive
+      winner_policy: no_optimizer_winner
+      bootstrap_samples: 10000
+      bootstrap_seed: 0
+    family_seeds_yaml: data/seeds/family_seeds_mf_j2.yaml
+    seed_initialization:
+      mode: blend
+      blend_max_fraction: 0.35
+    optimizers:
+    - rnsde
+    - prnsde
+    - nsga2
+    - eps_nsga2
+    - age_moea2
+    - mopso
+    constellation_families:
+    - walker
+    - dual
+    - flower
+beta_dist:
+  # Operational search controller. One run-level CRN permutation is consumed at
+  # targets k(n)=min(N, initial_batch_size + followup_batch_size*n). Reported PDF
+  # convergence or a conclusive hard failure may stop a search candidate early.
+  # Final reporting and authoritative archive admission use canonical replay.
+  prior_alpha: 1.0
+  prior_beta: 1.0
+  convergence_half_width: 0.02
+  quantile: 0.9
+  sequential_stop_policy: threshold_directed
+  convergence_pdf_threshold: 4.0
+  # Adaptive sequential sampler: start at initial_batch_size events, check PDF at
+  # the Beta posterior mode, add followup_batch_size, and re-check until PDF
+  # convergence, conclusive hard failure, or finite-pool exhaustion. Production
+  # targets are 24 -> 32 -> 40 -> ... up to finite search-bank exhaustion;
+  # later targets are skipped once a stop condition is met. Exact publication
+  # replay remains a separate immutable 64-event bank.
+  initial_batch_size: 24
+  followup_batch_size: 8
+  success_rate_estimator: posterior_mean
+  # HPD (highest-posterior-density) interval classifies operational hard failures.
+  # It is not a catalogue-population probability claim and does not replace the
+  # exact finite-bank service fraction used by canonical reporting.
+  credible_interval_method: hpd
+  # SEARCH-ONLY per-event aggregation statistic for the optimizer's scalar
+  # dv & mass objectives. This is a search diagnostic/controller, NOT the
+  # canonical publication authority. Canonical (schema-5) results are the
+  # exact joint event-coverage DV/mass Pareto front with coverage eligibility
+  # ceil(q*N) = 58 of 64; no scalar aggregation defines the published front.
+  #   max      -> worst-case over feasible events (historical default; the
+  #               worst-event collapse that makes many distinct designs share
+  #               one (dv,mass) point and flattens the Pareto front)
+  #   quantile -> feasible-event quantile at beta_dist.quantile (softer worst-case)
+  #   cvar     -> feasible-event CVaR at beta_dist.quantile (tail mean)
+  #   mean     -> feasible-event mean (typical case)
+  # Softer statistics densify the search front (distinct designs -> distinct
+  # search objectives).
+  # PROMOTED max -> cvar 2026-07-03 on cross-family A/B (campaigns xfam_{walker,
+  # dual,flower,arbitrary}, nsga2 x4 seeds x ev32/pop24/nfev1000): front
+  # distinct_eps rose in EVERY family (walker 4->9.5, dual 5->7.5, flower
+  # 3.5->11, arbitrary 5->8). The sparse `max` front is an artifact of
+  # max-over-events near-1D collapse; CVaR-90 is a coherent tail-risk measure
+  # (mean of the worst 10% of feasible events) that reveals more of the real
+  # dv/mass trade-off for search scheduling. cvar forces full event scope when
+  # the ladder is on (cvarfix 0c9b479e) so every row estimates the
+  # same-support statistic.
+  objective_aggregation: cvar
+objectives:
+  min_success_rate: 0.9
+  success_target: 0.95
+  hard_dv_km_s: 2.5
+  hard_mass_kg: 1000.0
+  search_constellation_size_penalty_alpha: 0.10
+  # Report and search-prefer the lowest-dV FEASIBLE front row rather than a
+  # generation-rotated one, aligning the reported scalar with the dissertation's
+  # dV objective. Only feasible rows are eligible, so success/mass constraints are
+  # unchanged; the soft threshold sits just above the front's operating dV so it
+  # bites where low-dV is achievable and is inert otherwise. Validated by HV A/B.
+  search_dv_selection_pressure: true
+  search_soft_dv_km_s: 0.20
+evaluation:
+  crn: true
+  event_sample_count: until_convergence
+  event_sample_seed: 20260212
+  search_event_bank:
+    count: 500
+    selection_policy: catalogue_prefix
+  diagnostics:
+    # Per-event phase timing for the aggregated population_objective telemetry
+    # (event_loop / deterministic_mass). Off by default; the TC job generator
+    # flips it true so campaign JSONs carry the decomposition (one short lock
+    # per event, no numeric-path effect). Declared here so the strict
+    # production schema admits the key.
+    event_timing_trace: false
+  event_ladder:
+    # Disabled: when enabled the runtime forces beta_dist_event_scope='all' (one
+    # batch over the full stage), which BYPASSES the adaptive sequential sampler
+    # configured under beta_dist. With it off and event_sample_count=
+    # until_convergence, scope resolves to 'subset' and the per-design
+    # N->check->+M->recheck loop runs until posterior resolution or pool exhaust.
+    enabled: false
+    stage_counts:
+    - 8
+    - 16
+    - 24
+    - 32
+    - 40
+    - 48
+    - 56
+    - 64
+    final_replay_scope: all
+    promote_top_k: 24
+    promote_archive_front: true
+  randomize_constellation_epoch: false
+hf:
+  use_high_fidelity: true
+  evolve_limit_mode: absolute_cap
+  evolve_max_s: 7200
+  # Executable code 4 is compiled JB2008 with sealed offline driver inputs.
+  atmosphere_model_name: orekit_13_1_2_jb2008_f64_kernel_v1
+  atmosphere_model_source_sha256: 066252ce214aa7cde96323a95b4ff2d0ce29e61071b601c37c96d14dfd97b70c
+  atmosphere_driver_authority: compiled_set_jb2008_drivers_hash_validated_v1
+  atm_model: 4
+  sph_order: 5
+  gravity_fast_path_order_cap: 7
+  # 172800 s 5x5-gravity + drag + SRP + Sun + Moon cross-method gate: Vern9
+  # dt_max=300 s at 1e-8 agrees with RKV98 dt_max=60 s to centimetres.
+  eps: 1.0e-08
+  eps_floor: 1.0e-10
+  method: vern9
+  dt_max: 300.0
+  ephemeris_sample_interval_s: 300.0
+  detmass_hf_validate_seed_scale: 1.0
+  max_kepler_samples: 4000
+  perturbs:
+  - drag
+  - srp
+  - sun
+  - moon
+  sigma_context_mode: minimal
+  require_precomputed_ephemeris: true
+  auto_build_ephemeris_cache: true
+  encke_deviation_km: 2.0
+dissertation_pipeline:
+  transfer_diagnostics: true
+  pareto_metrics_max_points: 64
+  strict_validation: true

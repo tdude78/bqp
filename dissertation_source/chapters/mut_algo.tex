@@ -1,0 +1,31 @@
+\begin{minipage}{\linewidth}
+\captionsetup{type=algorithm,hypcap=false}
+\caption{Production Julier-7 Dust Transform}
+\label{alg:mut}
+\end{minipage}
+\begin{algorithmic}[1]
+\State \textbf{Input:} release mean $\boldsymbol{\mu}_0\!\in\!\mathbb{R}^6$, covariance $\boldsymbol{P}_0\!\in\!\mathbb{R}^{6\times6}$, horizon $\tau$, and dynamics map $\boldsymbol{F}_{t\rightarrow t+\tau}$
+\State \textbf{Output:} propagated mean $\boldsymbol{\mu}^+$ and covariance $\boldsymbol{P}^+$
+\Statex
+\State Bind the compiled production component count \(K=1\)
+\State Retain \texttt{maxvar}, scaled-TOF \(\alpha\), and rank 1 as dormant split controls; form no child components at \(K=1\)
+\State Compute a covariance square root \(\boldsymbol{S}\) such that \(\boldsymbol{S}\boldsymbol{S}^{\top}=\boldsymbol{P}_0\)
+\State Generate the authority-pinned Julier minimal-skew simplex offsets \(\{\boldsymbol{\xi}_c\}_{c=1}^{7}\)
+\State Omit the zero-weight centre point and assign \(w_c=1/7\) to every retained point
+\For{\(c=1,\ldots,7\)}
+    \State \(\boldsymbol{\chi}_c \gets \boldsymbol{\mu}_0+\boldsymbol{S}\boldsymbol{\xi}_c\)
+    \State \(\boldsymbol{\chi}_c^+ \gets \boldsymbol{F}_{t\rightarrow t+\tau}(\boldsymbol{\chi}_c)\)
+\EndFor
+\State Rebuild the propagated moments:
+\begin{align}
+    \boldsymbol{\mu}^+ &=
+        \sum_{c=1}^{7} w_c\boldsymbol{\chi}_c^+,\\
+    \boldsymbol{P}^+ &=
+        \sum_{c=1}^{7} w_c
+        (\boldsymbol{\chi}_c^+-\boldsymbol{\mu}^+)
+        (\boldsymbol{\chi}_c^+-\boldsymbol{\mu}^+)^\top.
+\end{align}
+\State \textbf{Return} \((\boldsymbol{\mu}^+,\boldsymbol{P}^+)\)
+\Statex
+\Statex \(\triangleright\) GMM K=3/Gauss--Hermite splitting, Merwe-13, adaptive-\(\alpha\), and Monte Carlo selection are historical counterfactual arms, not production steps.
+\end{algorithmic}

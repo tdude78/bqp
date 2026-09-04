@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860">
+  <defs>
+    <style>
+      .title { font-family: Helvetica, Arial, sans-serif; font-size: 38px; font-weight: 700; fill: #17324a; }
+      .subtitle { font-family: Helvetica, Arial, sans-serif; font-size: 20px; fill: #536473; }
+      .label { font-family: Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #17324a; }
+      .small { font-family: Helvetica, Arial, sans-serif; font-size: 18px; fill: #61707d; }
+    </style>
+    <filter id="dust-blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="860" fill="#fcfaf5"/>
+  <text x="88" y="92" class="title">Concept of operations</text>
+  <text x="88" y="124" class="subtitle">Unified dissertation schematic; geometry is illustrative and not to scale</text>
+  <line x1="88" y1="146" x2="1312" y2="146" stroke="#d7dde3" stroke-width="2"/>
+
+  <circle cx="720" cy="450" r="242" fill="#d7e8f0" stroke="#6ea3a0" stroke-width="3"/>
+  <ellipse cx="720" cy="450" rx="242" ry="90" fill="none" stroke="#b5c8d4" stroke-width="2"/>
+  <ellipse cx="720" cy="450" rx="90" ry="242" fill="none" stroke="#b5c8d4" stroke-width="2"/>
+  <path d="M 478 450 C 612 357, 828 357, 962 450" fill="none" stroke="#b5c8d4" stroke-width="2"/>
+  <path d="M 478 450 C 612 543, 828 543, 962 450" fill="none" stroke="#b5c8d4" stroke-width="2"/>
+
+  <ellipse cx="720" cy="530" rx="286" ry="28" fill="none" stroke="#111111" stroke-width="5" opacity="0.85"/>
+  <path d="M 528 280 C 620 156, 798 156, 916 302" fill="none" stroke="#1e5b59" stroke-width="5" stroke-dasharray="10 8"/>
+  <path d="M 620 684 C 536 790, 404 744, 420 598" fill="none" stroke="#8d4e24" stroke-width="5" stroke-dasharray="10 8"/>
+  <path d="M 820 684 C 904 790, 1036 744, 1020 598" fill="none" stroke="#325fa2" stroke-width="5" stroke-dasharray="10 8"/>
+
+  <circle cx="720" cy="220" r="17" fill="#d62828"/>
+  <path d="M 720 193 L 729 212 L 750 215 L 734 230 L 739 250 L 720 239 L 701 250 L 706 230 L 690 215 L 711 212 Z" fill="#d62828"/>
+
+  <circle cx="590" cy="538" r="10" fill="#7a7a7a"/>
+  <g filter="url(#dust-blur)">
+    <ellipse cx="802" cy="554" rx="94" ry="22" fill="#556270" opacity="0.38"/>
+    <ellipse cx="762" cy="551" rx="110" ry="18" fill="#556270" opacity="0.24"/>
+  </g>
+
+  <rect x="402" y="662" width="42" height="26" rx="6" fill="#8d4e24"/>
+  <rect x="405" y="650" width="14" height="12" fill="#d9dee2" stroke="#61707d" stroke-width="1.3"/>
+  <rect x="427" y="650" width="14" height="12" fill="#d9dee2" stroke="#61707d" stroke-width="1.3"/>
+  <line x1="395" y1="656" x2="405" y2="662" stroke="#61707d" stroke-width="2"/>
+  <line x1="441" y1="662" x2="452" y2="656" stroke="#61707d" stroke-width="2"/>
+
+  <rect x="1010" y="548" width="42" height="26" rx="6" fill="#325fa2"/>
+  <rect x="1002" y="555" width="12" height="12" fill="#d9dee2" stroke="#61707d" stroke-width="1.3"/>
+  <rect x="1048" y="555" width="12" height="12" fill="#d9dee2" stroke="#61707d" stroke-width="1.3"/>
+  <line x1="1002" y1="561" x2="990" y2="569" stroke="#61707d" stroke-width="2"/>
+  <line x1="1060" y1="561" x2="1072" y2="569" stroke="#61707d" stroke-width="2"/>
+
+  <text x="208" y="338" class="label">Deployer</text>
+  <text x="208" y="366" class="small">deployment state</text>
+  <line x1="320" y1="350" x2="478" y2="410" stroke="#61707d" stroke-width="2.5"/>
+
+  <text x="154" y="536" class="label">Release</text>
+  <text x="154" y="564" class="small">release state</text>
+  <line x1="276" y1="547" x2="578" y2="547" stroke="#61707d" stroke-width="2.5"/>
+
+  <text x="1028" y="582" class="label">Interception</text>
+  <text x="1028" y="610" class="small">intercept state</text>
+  <line x1="1000" y1="590" x2="888" y2="564" stroke="#61707d" stroke-width="2.5"/>
+
+  <text x="562" y="730" class="label">Secondary</text>
+  <text x="720" y="730" class="label">Primary</text>
+  <text x="744" y="606" class="label">Dust</text>
+
+  <rect x="578" y="152" width="200" height="32" rx="4" fill="#fcfaf5" opacity="0.92"/>
+  <text x="584" y="174" class="label">Conjunction</text>
+  <rect x="594" y="182" width="270" height="22" rx="3" fill="#fcfaf5" opacity="0.92"/>
+  <text x="600" y="198" class="small">closest-approach geometry</text>
+</svg>

@@ -1,0 +1,230 @@
+\newglossaryentry{sym:deltaV}{
+    type=symbolslist,
+    name={\ensuremath{\DV}},
+    sort={DeltaV},
+    description={Executed maneuver coordinate in canonical event-coverage resource boxes, including phasing, replayed transfer, and release-control burn norms (\si{\kilo\metre\per\second})}
+}
+
+\newglossaryentry{sym:mdust}{
+    type=symbolslist,
+    name={\ensuremath{\Mdust}},
+    sort={Mdust},
+    description={Pc-inverted released dust population mass coordinate in canonical event-coverage resource boxes (\si{\kilogram}); deterministic intercepted-mass sufficiency is enforced separately as a physical gate}
+}
+
+\newglossaryentry{sym:Hx}{
+    type=symbolslist,
+    name={\ensuremath{H(x)}},
+    sort={Hx},
+    description={Serviced fraction metric giving the proportion of conjunction events that admit a feasible intercept and dust release under the operational guardrails (unitless)}
+}
+
+\newglossaryentry{sym:f1}{
+    type=symbolslist,
+    name={\ensuremath{\fone(x)}},
+    sort={f1},
+    description={Raw maneuver coordinate of one exact canonical event-coverage box before search regularization (units of \si{\kilo\metre\per\second})}
+}
+
+\newglossaryentry{sym:f2}{
+    type=symbolslist,
+    name={\ensuremath{\ftwo(x)}},
+    sort={f2},
+    description={Raw released-dust coordinate of one exact canonical event-coverage box before search regularization (units of \si{\kilogram})}
+}
+
+\newglossaryentry{sym:re}{
+    type=symbolslist,
+    name={\ensuremath{\RE}},
+    sort={Re},
+    description={WGS84 equatorial Earth radius, \SI{6378.137}{\kilo\metre}, used as the \(J_2\) reference radius of the mean-element design lane; the high-fidelity gravity field carries its own reference radius. Constellation parameterizations convert between altitude and semi-major axis against a separate compiled altitude datum of \SI{6378}{\kilo\metre}; the two are not interchangeable (\si{\kilo\metre})}
+}
+
+\newglossaryentry{sym:cd}{
+    type=symbolslist,
+    name={\ensuremath{\CD}},
+    sort={Cd},
+    description={Free-molecular drag coefficient applied within the dust-force model (unitless)}
+}
+
+\newglossaryentry{sym:vrel}{
+    type=symbolslist,
+    name={\ensuremath{\Vrel}},
+    sort={vrel},
+    description={Relative speed between the dust plume and resident space object at intercept, tracked as a diagnostic of energy transfer (\si{\kilo\metre\per\second})}
+}
+
+\newglossaryentry{sym:pc}{
+    type=symbolslist,
+    name={\ensuremath{P_c}},
+    sort={Pc},
+    description={Collision probability for a predicted conjunction. In the concept-of-operations framing it is a screening quantity; in the runtime it is the short-encounter encounter-plane disk integral that the released-mass solve inverts against packet count at fixed covariance. No tracking-update model refines it during a campaign (unitless)}
+}
+
+\newglossaryentry{sym:pcadv}{
+    type=symbolslist,
+    name={\ensuremath{P_c^{\mathrm{adv}}}},
+    sort={Pcadv},
+    description={Notional advisory collision-probability threshold used in the concept-of-operations framing; production simulations admit unsafe events through catalogue screening plus geometric, timing, and feasibility gates rather than a live \(P_c\) trigger (unitless)}
+}
+
+\newglossaryentry{sym:pccom}{
+    type=symbolslist,
+    name={\ensuremath{P_c^{\mathrm{com}}}},
+    sort={Pccom},
+    description={Notional commit collision-probability threshold used in the concept-of-operations framing; production simulations use it as timing context, not as an implemented event-admission criterion (unitless)}
+}
+
+\newglossaryentry{sym:tlead}{
+    type=symbolslist,
+    name={\ensuremath{t_\ell}},
+    sort={tlead},
+    description={Lead time between dust intercept and conjunction epoch available for the induced trajectory change to separate the encounter geometry (\si{\second} or \si{\hour})}
+}
+
+\newglossaryentry{sym:tleadstar}{
+    type=symbolslist,
+    name={\ensuremath{t_\ell^\star}},
+    sort={tleadstar},
+    description={Minimum required lead time enforced by the operational policy and transfer-feasibility guardrails (\si{\second} or \si{\hour})}
+}
+
+\newglossaryentry{sym:dmiss}{
+    type=symbolslist,
+    name={\ensuremath{d_{\mathrm{miss}}}},
+    sort={dmiss},
+    description={Maximum allowed miss distance at the release/intercept point for a transfer to remain acceptable (\si{\metre})}
+}
+
+\newglossaryentry{sym:omegaunsafe}{
+    type=symbolslist,
+    name={\ensuremath{\Omega_{\mathrm{unsafe}}}},
+    sort={Omegaunsafe},
+    description={Reusable bank of screened unsafe conjunction events supplied to the mission-scoring workflow}
+}
+
+\newglossaryentry{sym:theta}{
+    type=symbolslist,
+    name={\ensuremath{\theta}},
+    sort={theta},
+    description={Latent event-success probability in the beta-posterior reliability model (unitless)}
+}
+
+\newglossaryentry{sym:ns}{
+    type=symbolslist,
+    name={\ensuremath{n_s}},
+    sort={ns},
+    description={Count of successful events accumulated during adaptive mission scoring (unitless)}
+}
+
+\newglossaryentry{sym:nf}{
+    type=symbolslist,
+    name={\ensuremath{n_f}},
+    sort={nf},
+    description={Count of failed events accumulated during adaptive mission scoring (unitless)}
+}
+
+\newglossaryentry{sym:q}{
+    type=symbolslist,
+    name={\ensuremath{q}},
+    sort={q},
+    description={Configured exact finite-bank coverage fraction; the baseline \(q=0.9\) requires \(\lceil qN\rceil=58\) of \(N=64\) unsafe events (unitless)}
+}
+
+\newglossaryentry{sym:c}{
+    type=symbolslist,
+    name={\ensuremath{c}},
+    sort={c},
+    description={Configured confidence level used for posterior reliability intervals and \gls{hpd} threshold bands (unitless)}
+}
+
+\newglossaryentry{sym:j1}{
+    type=symbolslist,
+    name={\ensuremath{F_1}},
+    sort={j1},
+    description={Final penalized mission objective associated with deployer maneuver burden after the log-space transform and policy penalties (\si{\kilo\metre\per\second} semantics)}
+}
+
+\newglossaryentry{sym:j2}{
+    type=symbolslist,
+    name={\ensuremath{F_2}},
+    sort={j2},
+    description={Final penalized mission objective associated with released dust burden after the log-space transform and policy penalties (\si{\kilogram} semantics)}
+}
+
+\newglossaryentry{sym:mint}{
+    type=symbolslist,
+    name={\ensuremath{m_{\mathrm{int},k}}},
+    sort={mint},
+    description={Event-level intercepted dust mass required to satisfy the deterministic momentum-transfer feasibility gate for event \(k\) (\si{\kilogram})}
+}
+
+\newglossaryentry{sym:ik}{
+    type=symbolslist,
+    name={\ensuremath{I_k}},
+    sort={ik},
+    description={Binary success indicator for event \(k\), equal to 1 when transfer and deterministic-mass feasibility checks both pass (unitless)}
+}
+
+\newglossaryentry{sym:slcb}{
+    type=symbolslist,
+    name={\ensuremath{s_{\mathrm{LCB}}}},
+    sort={slcb},
+    description={Posterior lower credible-interval diagnostic used only for adaptive-search band classification; canonical service feasibility uses the exact 64-scenario success fraction (unitless)}
+}
+
+\newglossaryentry{sym:x}{
+    type=symbolslist,
+    name={\ensuremath{x}},
+    sort={x},
+    description={Constellation design vector evaluated by the mission-scoring workflow; its interpretation depends on the architecture family under study}
+}
+
+\newglossaryentry{sym:sx}{
+    type=symbolslist,
+    name={\ensuremath{\mathcal{S}(x)}},
+    sort={Sx},
+    description={Set of successful unsafe events serviced by design \(x\), used to define successful-event resource summaries}
+}
+
+\newglossaryentry{sym:alpha0}{
+    type=symbolslist,
+    name={\ensuremath{\alpha_0}},
+    sort={alpha0},
+    description={Alpha parameter of the beta prior used in the adaptive reliability model (unitless)}
+}
+
+\newglossaryentry{sym:beta0}{
+    type=symbolslist,
+    name={\ensuremath{\beta_0}},
+    sort={beta0},
+    description={Beta parameter of the beta prior used in the adaptive reliability model (unitless)}
+}
+
+\newglossaryentry{sym:tau}{
+    type=symbolslist,
+    name={\ensuremath{\tau}},
+    sort={tau},
+    description={Time-of-flight or propagation horizon variable used in transfer solving and short-horizon uncertainty propagation (\si{\second} or \si{\minute})}
+}
+
+\newglossaryentry{sym:dconj}{
+    type=symbolslist,
+    name={\ensuremath{d_{\text{conj}}}},
+    sort={dconj},
+    description={Conjunction-truth miss distance between the primary and secondary objects at closest approach; an event is admitted to the bank when it lies below the \SI{1}{\kilo\metre} unsafe threshold (\si{\kilo\metre})}
+}
+
+\newglossaryentry{sym:kappa}{
+    type=symbolslist,
+    name={\ensuremath{\kappa}},
+    sort={kappa},
+    description={Momentum-enhancement factor in the deterministic intercepted-mass gate, where the delivered fraction \(f(m)=\kappa m/(m_p+m)\) rises monotonically to \(\kappa\). Production seals \(\kappa=1\); a \(\{1,1.25,1.5,2\}\) sensitivity is proposed but not configured. In the shared-target contact bound that sets the reported released mass, \(\kappa\) is inert and its admissible domain is \((0,1]\), so values above unity are refused there and cannot be read as a released-mass sensitivity coordinate (unitless)}
+}
+
+\newglossaryentry{sym:u}{
+    type=symbolslist,
+    name={\ensuremath{\mathbf{u}}},
+    sort={u},
+    description={Three-parameter transfer-solver decision vector controlling phasing duration, semimajor-axis adjustment, and waiting time}
+}

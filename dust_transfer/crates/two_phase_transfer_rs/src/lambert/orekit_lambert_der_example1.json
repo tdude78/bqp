@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "authority_label": "frozen published Orekit/Der vectors; Orekit runtime not executed",
+  "source": {
+    "project": "Orekit",
+    "version": "14.0-SNAPSHOT",
+    "commit": "080def3a660d1753a5c5b19f225443f712a8e683",
+    "tree": "bb555b4390714aef66c0af7d64b6f483d3df7d5c",
+    "published_reference": "https://amostech.com/TechnicalPapers/2011/Poster/DER.pdf",
+    "test_file": "src/test/java/org/orekit/control/heuristics/lambert/LambertSolverTest.java",
+    "test_method": "testLambertDerExample1",
+    "test_file_sha256": "9d3c69f7c9a965aa6fa6b05e6fca8ed54e9ce2150a99a024c63f5585ae123c38",
+    "solver_file": "src/main/java/org/orekit/control/heuristics/lambert/LambertSolver.java",
+    "solver_file_sha256": "eb853403040d58ded55e180038b4a549f3d1118509e6854ada0a1cad1b4fddfc",
+    "path_type_file": "src/main/java/org/orekit/control/heuristics/lambert/LambertPathType.java",
+    "path_type_file_sha256": "593210d2db444ce2959ee5cd624f5f2bf020c7f30044fb0840a914a7f47063b0"
+  },
+  "transformations": {
+    "position": "Orekit m * 1e-3 = fixture km",
+    "velocity": "Orekit m/s * 1e-3 = fixture km/s",
+    "gravitational_parameter": "Orekit m^3/s^2 * 1e-9 = fixture km^3/s^2"
+  },
+  "semantic_hashes": {
+    "algorithm": "SHA-256",
+    "canonical_format": "orekit-lambert-der-example1-ieee754be-v1",
+    "canonical_byte_format": {
+      "input_bytes": "ASCII(orekit-lambert-der-example1:input:v1) || 0x00 || f64be(mu_km3_s2,r1_km[0..3],r2_km[0..3],tof_s)",
+      "ordered_output_bytes": "ASCII(orekit-lambert-der-example1:ordered-output:v1) || 0x00 || u32be(solution_count) || each listed solution: utf8_u32be_len(branch_id) || u32be(orekit_solution_index) || utf8_u32be_len(orekit_solution_kind) || u8(prograde) || i32be(revolutions) || u8(low_path) || f64be(expected_v1_km_s[0..3],expected_v2_km_s[0..3])",
+      "float_encoding": "IEEE-754 binary64 bits, big-endian; signed zero preserved",
+      "integer_encoding": "u32 and i32 two's-complement, big-endian",
+      "boolean_encoding": "false=0x00; true=0x01",
+      "string_encoding": "u32 big-endian UTF-8 byte length followed by exact UTF-8 bytes",
+      "solution_order": [
+        "prograde-m0",
+        "prograde-m1-low",
+        "prograde-m1-high",
+        "retrograde-m0",
+        "retrograde-m1-low",
+        "retrograde-m1-high"
+      ]
+    },
+    "input_sha256": "f1426b00cefc48acea602e9a8c5feb8126fb277a644ac8d0121033301c3fb183",
+    "ordered_output_sha256": "f024d3b36bd9ba33a4079c9ba6271abcfa3f58713129dce336bbade6ba1c198f"
+  },
+  "inputs": {
+    "mu_km3_s2": 398600.435507,
+    "r1_km": [22592.145603, -1599.915239, -19783.950506],
+    "r2_km": [1922.067697, 4054.157051, -8925.727465],
+    "tof_s": 36000.0
+  },
+  "tolerance": {
+    "component_atol_km_s": 0.000001,
+    "rtol": 0.0
+  },
+  "solutions": [
+    {
+      "branch_id": "prograde-m0",
+      "orekit_solution_index": 0,
+      "orekit_solution_kind": "M0_UNIQUE_SOLUTION",
+      "prograde": true,
+      "revolutions": 0,
+      "low_path": true,
+      "expected_v1_km_s": [2.000652697, 0.387688615, -2.666947760],
+      "expected_v2_km_s": [-3.79246619, -1.77707641, 6.856814395]
+    },
+    {
+      "branch_id": "prograde-m1-low",
+      "orekit_solution_index": 1,
+      "orekit_solution_kind": "LOW_PATH",
+      "prograde": true,
+      "revolutions": 1,
+      "low_path": true,
+      "expected_v1_km_s": [-2.45759553, 1.16945801, 0.43161258],
+      "expected_v2_km_s": [-5.53841370, 0.01822220, 5.49641054]
+    },
+    {
+      "branch_id": "prograde-m1-high",
+      "orekit_solution_index": 2,
+      "orekit_solution_kind": "HIGH_PATH",
+      "prograde": true,
+      "revolutions": 1,
+      "low_path": false,
+      "expected_v1_km_s": [0.50335770, 0.61869408, -1.57176904],
+      "expected_v2_km_s": [-4.18334626, -1.13262727, 6.13307091]
+    },
+    {
+      "branch_id": "retrograde-m0",
+      "orekit_solution_index": 0,
+      "orekit_solution_kind": "M0_UNIQUE_SOLUTION",
+      "prograde": false,
+      "revolutions": 0,
+      "low_path": true,
+      "expected_v1_km_s": [2.96616042, -1.27577231, -0.75545632],
+      "expected_v2_km_s": [5.84375455, -0.20047673, -5.48615883]
+    },
+    {
+      "branch_id": "retrograde-m1-low",
+      "orekit_solution_index": 1,
+      "orekit_solution_kind": "LOW_PATH",
+      "prograde": false,
+      "revolutions": 1,
+      "low_path": true,
+      "expected_v1_km_s": [-1.38861608, -0.47836611, 2.21280154],
+      "expected_v2_km_s": [3.92901545, 1.50871943, -6.52926969]
+    },
+    {
+      "branch_id": "retrograde-m1-high",
+      "orekit_solution_index": 2,
+      "orekit_solution_kind": "HIGH_PATH",
+      "prograde": false,
+      "revolutions": 1,
+      "low_path": false,
+      "expected_v1_km_s": [1.33645655, -0.94654565, 0.30211211],
+      "expected_v2_km_s": [4.93628678, 0.39863416, -5.61593092]
+    }
+  ]
+}

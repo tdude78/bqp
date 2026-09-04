@@ -1,0 +1,24 @@
+use Cwd qw(getcwd);
+
+add_cus_dep('acn', 'acr', 0, 'makeglossaries');
+add_cus_dep('glo', 'gls', 0, 'makeglossaries');
+add_cus_dep('syi', 'syg', 0, 'makeglossaries');
+
+push @generated_exts, qw(acn acr alg syi syg slg bbl glg glo gls ist nlo fot);
+
+sub makeglossaries {
+    my ($base) = @_;
+    my $directory = '.';
+    my $name = $base;
+
+    if ($base =~ m{^(.*)/([^/]+)$}) {
+        $directory = $1;
+        $name = $2;
+    }
+
+    my $original_directory = getcwd();
+    chdir($directory) or return 1;
+    my $result = system('makeglossaries', $name);
+    chdir($original_directory) or return 1;
+    return $result;
+}

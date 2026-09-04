@@ -1,0 +1,78 @@
+{
+  "astropy_version": "7.2.0",
+  "axes": "icrs",
+  "binary_format_version": 1,
+  "bodies": {
+    "jupiter": {
+      "body_id": 2,
+      "dt_days": 1.0,
+      "jd_end": 2462867.5,
+      "jd_start": 2458849.5,
+      "n_samples": 4019,
+      "sha256": "d9d506bd9227870e594ba7894a9652e8bd58de333b75cd08b3bf8cbf93163437",
+      "size_bytes": 96504,
+      "source_target": "jupiter_barycenter"
+    },
+    "moon": {
+      "body_id": 1,
+      "dt_days": 0.125,
+      "jd_end": 2462867.5,
+      "jd_start": 2458849.5,
+      "n_samples": 32145,
+      "sha256": "ca64a1a8b0e043002388f43244dd169b1439ef323f883ec6cca9b7df5f731e5c",
+      "size_bytes": 771528,
+      "source_target": "moon_center"
+    },
+    "sun": {
+      "body_id": 0,
+      "dt_days": 1.0,
+      "jd_end": 2462867.5,
+      "jd_start": 2458849.5,
+      "n_samples": 4019,
+      "sha256": "883e095b8a6e8df59cd528828707f6c578f6d1ffbbb05bee2df42d32d716c5b4",
+      "size_bytes": 96504,
+      "source_target": "sun_center"
+    },
+    "venus": {
+      "body_id": 3,
+      "dt_days": 1.0,
+      "jd_end": 2462867.5,
+      "jd_start": 2458849.5,
+      "n_samples": 4019,
+      "sha256": "69b82d3502f10d4d2b8db337373d2a858c4ac235bb7ce2856f507d8d0f30930f",
+      "size_bytes": 96504,
+      "source_target": "venus_center"
+    }
+  },
+  "coordinate_semantics": "geometric",
+  "dynamics_independent_time_scale": "tdb_internal_via_astropy",
+  "epoch_representation": "astronomical_julian_date",
+  "epoch_scale": "utc",
+  "erfa_version": "2.0.1.5",
+  "frame": "earth_centered_icrs_cartesian_km",
+  "future_utc_policy": "frozen_last_known_leap_second",
+  "header_format": "<4sIQdddB7s",
+  "header_size_bytes": 48,
+  "independent_oracle": {
+    "ephemeris_source": "DE441",
+    "path": "data/oracles/jpl_horizons_geometric_vectors_2026-07-12.json",
+    "service": "JPL Horizons API",
+    "sha256": "724a1845848f9f3932d5cdb85c7bf3b719247e47829fada4b3f1ee90257e85c0"
+  },
+  "interpolation": "linear_on_utc_jd_grid",
+  "light_time_correction": "none",
+  "origin": "earth_center",
+  "payload_format": "n_samples_x_3_little_endian_float64_km",
+  "payload_size_policy": "exact_no_trailing_bytes",
+  "reserved_header_bytes": "zero",
+  "sha256": {
+    "jupiter": "d9d506bd9227870e594ba7894a9652e8bd58de333b75cd08b3bf8cbf93163437",
+    "moon": "ca64a1a8b0e043002388f43244dd169b1439ef323f883ec6cca9b7df5f731e5c",
+    "sun": "883e095b8a6e8df59cd528828707f6c578f6d1ffbbb05bee2df42d32d716c5b4",
+    "venus": "69b82d3502f10d4d2b8db337373d2a858c4ac235bb7ce2856f507d8d0f30930f"
+  },
+  "source": "astropy_builtin_same_epoch_barycentric_difference",
+  "source_api": "get_body_barycentric(body,t)-get_body_barycentric('earth',t)",
+  "source_api_time_construction": "astropy.time.Time(jd, format='jd', scale='utc')",
+  "stellar_aberration_correction": "none"
+}

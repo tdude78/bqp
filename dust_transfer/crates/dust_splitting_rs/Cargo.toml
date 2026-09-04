@@ -1,0 +1,21 @@
+[package]
+name = "dust_splitting_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+
+[lib]
+name = "dust_splitting_rs"
+crate-type = ["rlib"]
+
+[dependencies]
+common_rs = { workspace = true }
+nalgebra = { workspace = true }
+smallvec = { workspace = true }
+wide = { workspace = true }
+
+[dev-dependencies]
+approx = { workspace = true }
+
+[lints]
+workspace = true

@@ -1,0 +1,87 @@
+\chapter{Optimizer Comparison and Architecture Evidence} \label{ch:results}
+
+This chapter defines the empirical readout for the dissertation's two-part results argument. Part~A compares optimizer families descriptively under shared hazardous-event evidence, fixed mission semantics, and actual-work reporting controls. Part~B interprets deployer architectures from the complete provenance-bearing evidence pool without selecting an optimizer. The purpose of this chapter is therefore not merely to display fronts, but to keep optimizer evidence and architecture evidence separated so dissertation-level claims remain attached to the reported campaign evidence.
+
+\section{Two-Part Results Structure} \label{se:results_structure}
+
+The results structure follows the logic established in Chapters~1--3. Part~A is a method-comparison question: how do optimizer families describe the maneuver--mass trade space when the event bank, transfer gates, dust-mass semantics, reliability scoring, and resource aggregation are held fixed? Part~B is an architecture question: across the complete supported design evidence, what do deployer constellations reveal about staging geometry, topology, and service burden?
+
+That separation protects the interpretation. A search method can navigate the configured landscape effectively without proving that one constellation family is universally sufficient. Likewise, a constellation pattern is meaningful only when its supporting rows retain complete method, seed, family, and physical provenance. Architecture interpretation therefore compares evidence exposed by all methods descriptively; it does not depend on a global or per-family optimizer choice.
+
+\section{Part A: Optimizer-Family Comparison} \label{se:part_a_results}
+
+Part~A reports optimizer behavior through a fixed evidence contract. Every optimizer-family cell is interpreted against the same catalogue-derived unsafe-event protocol, the same beta-distribution mission semantics, the same transfer and dust-feasibility gates, the same \gls{crn} policy where event sampling is stochastic, and the same preference for realized objective-evaluation accounting over raw wall-clock timing.
+
+The maneuver axis of the reported trade space is an \emph{intercept} \(\Delta V\). As defined in \cref{ch:methods}, it is the sum of the executed phasing burn, the replayed transfer burn, and the release-control burn. It excludes the arrival, or rendezvous, \(\Delta V\) that would be required to match the target's velocity; the runtime records that quantity as a diagnostic and never sums it into any reported total. The exclusion follows from the intercept concept rather than from a reporting choice, but its magnitude is large enough that it must be stated rather than left implicit. Across the three reference events of the sealed Stage-1 physics fixture (\texttt{crates/nd\_pipeline/tests/fixtures/physics\_3event}, frozen at commit \texttt{51dec426}, 2026-07-20), the recorded arrival delta-\(V\) magnitude is \SI{13.33}{\kilo\metre\per\second}, \SI{15.12}{\kilo\metre\per\second}, and \SI{14.21}{\kilo\metre\per\second}, roughly \(350\times\) the executed maneuver total for the same events. That fixture predates the current compiled-science authority (atmosphere model 8, Vern7 integrator, Julier-7 sigma set) by eight shipped reseals, one of which is recorded as moving every strict high-fidelity endpoint, so the ratio is reported as an order-of-magnitude statement about the excluded term and not as a current campaign value. Every \(\Delta V\) reported in this chapter is nonetheless an intercept \(\Delta V\)---phasing, transfer, and release control only---and is not comparable to any published figure that includes an arrival or capture burn.
+
+\begin{table}[htb]
+    \centering
+    \caption[Part~A evidence contract]{Evidence fields required for the Part~A optimizer comparison.}
+    \label{tab:part_a_evidence_contract}
+    \begin{tabularx}{0.94\linewidth}{@{}L{0.27\linewidth}Y@{}}
+        \toprule
+        Evidence field & Interpretation role \\
+        \midrule
+        Campaign provenance & Identifies the result root, configuration family, population and generation shape, seed count, and archive/provenance sidecars used for reporting. \\
+        Realized-work accounting & Records realized objective evaluations, physics event trials, and configured generation depth per cell. Work is measured, not capped: the canonical loader refuses a hard evaluation budget, so no cell is made comparison-ineligible on budget grounds. \\
+        Canonical replay work & Canonical replay is accounted separately and never pads or reconciles optimizer-budget consumption. \\
+        Descriptive work milestones & Reports realized objective evaluations at common front-quality milestones as descriptive trajectories, never as a method-selection threshold. \\
+        Final-front quality & Reports archive quality after matched evidence and mission semantics as descriptive evidence with no selection threshold. \\
+        Campaign-shape completeness & Requires every declared optimizer--family--fidelity cell to be present for the reported matrix shape: 36 cells for the Exact36 matrix, and 108 cells arranged as 36 three-island cohorts for the Intersect108 matrix. Missing, duplicate, or mismatched cells fail closed. \\
+        Family-shared hypervolume & Reports single-realization hypervolume values in \(\log_{10}\)-transformed maneuver--mass coordinates against one global reference corner fixed at the compiled feasibility caps (\SI{2.5}{\kilo\metre\per\second}, \SI{1000}{\kilo\gram}) with no margin. The reference is shared across all families and cells so box-fractions are mutually comparable; it is not derived from the data and is not a per-family reference. Every reported value additionally names its point-set basis---canonical \(N=64\) holdout front, or reconstructed search-archive front---because the two differ. \\
+        Pairwise description & Reports per-cell differences as single-realization descriptives. No interval estimate and no directional-agreement statistic is computed, because neither reported matrix supplies independent replicates. \\
+        Winner policy & No global or per-family optimizer winner is permitted, and no analysis artifact emits a winner field. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+The exact \(6\times3\times2\) cell grid---six optimizer methods, three constellation families, and two fidelity lanes---belongs at the end of this evidence chain. Two campaign shapes are reported over that grid. The \emph{Exact36} matrix evaluates it on the single root seed \(41127203\), giving 36 cells and one realization per cell. The \emph{Intersect108} matrix adds the seeds \(41127204\) and \(41127205\) under a cooperative three-island scheme with migration, giving 108 cells arranged as 36 three-island cohorts; the islands within a cohort exchange information by construction and are therefore not independent replicates. Because neither shape supplies independent replicates, every pairwise value remains strictly descriptive and no interval or agreement statistic is computed over the optimizer axis at all. No result selects, promotes, or carries one optimizer into Part~B; older ordering diagnostics remain historical and non-authoritative.
+
+Both shapes were last flown as campaign r55t (the internal label of the last matrix flight), closed out on 2026-08-28, on the third-generation (v3) event banks then in force and under the pre-correction Flower radial envelope. The representative banks (the 500-event search bank B500, the 64-event canonical holdout bank H64, and the reserve complement) were regenerated on 2026-08-29, and the shared-altitude Flower fairness envelope landed after the campaign; no matrix has been flown on either, so every campaign-level value in this chapter is historical, is scoped to that campaign, and supports no current family ordering. No figure in this chapter is drawn from a current campaign. The rendering suite in \texttt{tools/dissertation\_plots} is operable and its outputs carry per-directory manifests, but no matrix rendered after the bank regeneration exists, so the reported evidence is presented in tabular and textual form only. Historical renders retained in the presentation material are labelled there as retired configurations and back no claim in this chapter.
+
+\subsection{Screening-Lane Ranking Stability} \label{se:ranking_stability}
+
+The mixed-fidelity screening lane earns its role only if the candidate ordering it produces survives a change of fidelity, and that was measured rather than assumed. Every front candidate on the fixture's three reference events was submitted for offline re-convergence under the mandated high-fidelity acceptance model, outside the reported campaign, and its ordering compared against the mixed-fidelity one. The measurement was made on 2026-07-25 by a diagnostic harness retired from the tree on 2026-08-12 (commit \texttt{dced4536}); it is recoverable only at its frozen source commit \texttt{6c91ed9f} and has not been re-run against the representative event banks regenerated on 2026-08-29. The target is held on the mixed-fidelity path in both arms, so the difference isolates transfer-arc fidelity and says nothing about catalogue-target error.
+
+The ordering largely survives and the values do not. Rank correlation is high, with Spearman \(\rho\) between \num{0.93} and \num{0.97} and Kendall \(\tau\) between \num{0.80} and \num{0.89}. But the mixed-fidelity optimum is the high-fidelity optimum on only two of the three events; on the binding event---index 1 of the fixture's three---it falls to rank 28 of that event's \num{187} priced candidates, so a shortlist of at least \(k=28\)---about \SI{15}{\percent} of those priced candidates, and \SI{11.5}{\percent} of its \num{243}-member front---is needed to retain the high-fidelity optimum across all three events. Per-candidate intercept \(\Delta V\) moves by a median of \SIrange{2.5}{9.2}{\percent} and a maximum of \SIrange{264}{651}{\percent} across the three events. No per-event reported \(\Delta V\) is therefore defensible at better than roughly \SI{10}{\percent}, even where the ranking holds.
+
+Four limits attach to that result and are stated because the numbers flatter the screening lane if quoted bare. First, the re-convergence is conditional: only the transfer burn is free, while the phasing burn and all three timings stay pinned at their mixed-fidelity values, so each high-fidelity cost is an upper bound and the reported ranking disturbance is a lower bound rather than an estimate. Second, of the 704 front candidates across the three events, 105 failed to re-converge, and the failures concentrate in the expensive tail (best failed mixed-fidelity rank 24, 25 and 10 respectively), so they cannot overturn the first event's \(k=1\); the third event nonetheless carries one unpriced top-ten candidate, so its \(k=1\) is conditional and the binding event's \(k=28\) is a floor rather than an estimate. Third, the acceptance model is gravity-only \(5\times5\), matching the declared acceptance contract but omitting drag over these \SIrange{4}{31}{\hour} horizons. Fourth, the measurement covers three events on one constellation design and does not generalize to the population sweep the optimizer actually runs. Like every other campaign-level value in this chapter, this ranking-stability result is historical and supports no current claim; the \(k=28\) shortlist is a property of the retired fixture, not live guidance.
+
+This measurement does not rescue the cross-optimizer comparison, and must not be read as doing so. It is a statement about candidate ordering within an event, which is the only level at which an ordering statistic is currently computable; the optimizer axis fails for the prior reason given above, namely that neither reported campaign shape supplies independent replicates.
+
+\section{Evidence Controls and Descriptive Completeness Gate} \label{se:best_optimizer_gate}
+
+The bridge from Part~A to Part~B is an explicit descriptive-completeness gate. Architecture rows may be interpreted only when results remain traceable to common hazardous-event exposure, shared nominal controls, actual-work accounting, complete campaign-shape coverage, and the same transfer and dust-feasibility semantics used elsewhere in the manuscript. This gate protects the architecture read from a favorable sampling realization, an inconsistent solver path, or a presentation-only front without choosing among optimizers.
+
+Three checks are decisive. First, the compared optimizers see aligned stochastic evidence through the configured event-sampling and \gls{crn} policy. Second, the reported fronts reflect the same mission semantics, including strict deterministic intercepted-mass feasibility and conservative beta-distribution scoring. Third, every interpreted design remains attached to complete campaign-shape coverage and exact physical front evidence, with the campaign's two extreme canonical points additionally re-derived under an independent witness, so siting discussion is traceable to the reported campaign rather than to an isolated artifact. Because both reported shapes provide one realization per cell, that traceability is a provenance guarantee and not a replication guarantee, and the siting discussion is worded accordingly.
+
+\section{Part B: Constellation-Siting Interpretation} \label{se:part_b_results}
+
+Part~B is the architecture-interpretation contract, not a report of architecture results. No such interpretation is supported by the evidence in this chapter: the last flown matrix predates both the bank regeneration and the Flower fairness envelope (\cref{se:part_a_results}), so no design-level, family-level, or siting statement is made here. When a post-correction matrix exists, Part~B will interpret deployer architectures through the complete provenance-bearing design pool admitted by the descriptive-completeness gate, asking where supported designs stage their satellites, how topology variables are used, and whether structured families capture most of the useful trade space under that evidence. All optimizer methods will remain represented; architecture comparisons will not imply an optimizer winner. The interpretation will be organized at three levels:
+
+\begin{itemize}[leftmargin=*]
+    \item design-level patterns, such as altitude, inclination, plane count, phasing, and family membership among supported front members;
+    \item family-level patterns, such as whether Walker, Flower, or Dual-Shell Walker-Delta designs occupy particular front regions;
+    \item campaign-scope limits, including catalogue scope, event-sampling policy, solver depth, sensitivity settings, and objective semantics.
+\end{itemize}
+
+The phrase ``pooled non-dominated set'' is reserved for an explicitly defined set being plotted or summarized. The manuscript avoids retired universal-front wording and avoids implying a universal optimum over architectures outside the studied families and campaign controls.
+
+\subsection{Topology and Family Use} \label{se:topology_selection}
+
+The topology discussion will report how the evidence uses bounded topology variables. Walker, Dual-Shell Walker-Delta, and Flower designs will be interpreted through their Chapter~3 variables and bounds, under the shared radial envelope and separation certificate now enforced on all three. All three evaluated families are analytically structured; an unstructured plane-constrained encoding was scoped for this study but was not evaluated, so no evidence in this chapter bounds what an unstructured architecture could achieve. Claims about median satellite count, bound saturation, or family sufficiency will be tied to post-correction campaign tables and are not imported from earlier diagnostic runs; in particular, no pre-correction Flower-versus-Walker ordering is carried forward, because the earlier Flower encoding did not share the realized radial envelope.
+
+\subsection{Reference and Sensitivity Comparisons} \label{se:result_sensitivity_slots}
+
+Reference-grid, worked-case, covariance-sensitivity, size-penalty, and archive-retention material will have distinct roles once such evidence exists; none is reported in this chapter:
+
+\begin{itemize}[leftmargin=*]
+    \item a worked case illustrates objective construction and is not treated as representative unless the relevant provenance supports that claim;
+    \item a reference grid contextualizes optimizer performance under matched event, solver, and scoring semantics;
+    \item covariance and size-penalty sweeps provide sensitivity evidence with explicit run-shape limits;
+    \item archive-retention or cross-optimizer transfer tests are mechanics controls, not optimizer-comparison evidence unless the descriptive protocol defines them that way.
+\end{itemize}
+
+\section{Chapter Evidence Discipline} \label{se:results_evidence_discipline}
+
+The result interpretation is strongest when every numerical claim traces to an archived artifact, every figure caption names the plotted set's scope, and every Part~A or Part~B conclusion stays at the strength warranted by the evidence. The chapter therefore treats stale process language, old campaign labels, and internal diagnostic names as evidence-quality problems rather than stylistic details.

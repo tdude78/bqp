@@ -1,0 +1,60 @@
+[package]
+name = "dust_estimates_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+
+[lib]
+name = "dust_estimates_rs"
+crate-type = ["rlib"]
+
+[dependencies]
+satpy_core = { workspace = true, features = ["parallel"] }
+nd_sched = { workspace = true }
+lightyear_odeint_rs = { workspace = true, default-features = false, features = ["autodiff"] }
+# Boundary A′ slice A4: the event driver's cov-split/centroid stages consume
+# dust_splitting_rs crate-internally (rlib, no python features — same shape as
+# two_phase_transfer_rs's dep). NOTE: the design's "two_phase sigma cores" dep
+# is a cycle (two_phase_transfer_rs already depends on this crate), which is
+# why the dep is taken this way round and not the design's. This used to say
+# "see fraction_event.rs module docs"; that module was deleted 2026-08-21 and
+# the explanation is inlined here so it cannot be stranded again — no path gate
+# scans manifests.
+dust_splitting_rs = { workspace = true }
+anyhow = { workspace = true }
+rayon = { workspace = true }
+wide = { workspace = true }
+
+[features]
+# `parallel` is RETIRED (2026-08-14), for the same reason as the three below and
+# with one extra piece of evidence: its `cfg(not(...))` arm no longer compiled.
+# It was default-on AND re-pinned on by both dependents -- `nd_pipeline` with
+# `features = ["parallel"]` and `two_phase_transfer_rs` with
+# `default-features = false, features = ["parallel"]` -- so no build in the
+# workspace ever selected the serial arm. It had rotted unnoticed:
+# `fraction_finalize.rs` reached for `rayon::prelude` with no gate at all, so
+# `cargo check -p dust_estimates_rs --no-default-features` failed with E0433 +
+# E0599. The winning arm is now unconditional and `rayon` is a plain dependency.
+# Bit-identical by construction: every build that ever ran already compiled
+# exactly the arms that remain.
+# Fixed, non-production scalar-leg diagnostics used by the Part A solver
+# qualification executable.  Canonical builds leave it off: caller-owned
+# bounded records only, no runtime physics or solver controls.
+solver-qualification = ["lightyear_odeint_rs/scalar-leg-observer"]
+# `opt_reduce_candidates`, `opt_adaptive_rays` and `opt_conditional_dense` are
+# RETIRED. All three were default-on and additionally re-pinned on by
+# two_phase_transfer_rs, which every dependent in the workspace reaches, so no
+# build ever compiled their `cfg(not(...))` arms. Their winning arms are now
+# unconditional. Do not reintroduce them as flags: a knob nothing can turn is
+# worse than no knob, because it reads like a fallback exists.
+# mimalloc-global removed — allocator declared in lightyear_odeint_rs only.
+
+[dev-dependencies]
+criterion = { workspace = true }
+
+[[bench]]
+name = "hf_mass_solver_bench"
+harness = false
+
+[lints]
+workspace = true

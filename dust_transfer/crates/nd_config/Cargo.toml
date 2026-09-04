@@ -1,0 +1,23 @@
+[package]
+name = "nd_config"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+description = "Lean, validated ingestion of the dissertation production config"
+
+[lib]
+crate-type = ["rlib"]  # Internal crate only, no Python bindings
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+anyhow = { workspace = true }
+sha2 = { workspace = true }
+
+[dev-dependencies]
+# Shared test macros (require_ok!/require_err!); call sites migrate in W6.
+common_rs = { workspace = true }
+
+[lints]
+workspace = true

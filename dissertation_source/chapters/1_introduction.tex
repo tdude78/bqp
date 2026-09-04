@@ -1,0 +1,162 @@
+\chapter{Introduction} \label{ch:intro}
+\gls{leo} is no longer a sparse operating region. It is a coupled socio-technical environment in which active spacecraft, inactive spacecraft, upper stages, and fragmentation debris share the same orbital bands, and in which rare but catastrophic collisions can inject long-lived fragment populations back into the system. Recent agency reporting and sustainability studies continue to show that congestion, collision risk, and long-horizon environmental stability can no longer be treated as separable concerns \cite{ESAEnvironment2025,Muciaccia2024LEOCapacity,commercialspace}. For active spacecraft, conjunction assessment and collision avoidance are now routine operational functions. For the debris population itself, however, many high-risk encounters remain unmanaged even though debris-debris collisions are among the strongest endogenous drivers of future environmental deterioration \cite{Kessler1978,Wagner2024ADR}.
+
+This work studies a space-based dust-enabled just-in-time collision-avoidance architecture, a \gls{jca} concept in which deployer spacecraft release dust clouds after a hazardous encounter has been identified but before closest approach. The goal is to impart targeted perturbations to threatening debris objects early enough to change the predicted encounter geometry. The central question is whether a bounded deployer service architecture can identify hazardous events, reach them in time, deliver physically meaningful nudges, and do so with acceptable mission-level reliability and resource expenditure.
+
+The planned evidence is organized around two complementary questions. Part~A asks how optimizer families compare when every method is judged under matched hazardous-event evidence, fixed mission semantics, and actual-work reporting controls. Part~B is designed to interpret what those shared evaluation rules reveal about the deployer-constellation design space itself. Part~A remains an evidence gate for future architecture interpretation rather than a free-form optimizer choice; no current optimizer winner is asserted. Introducing that split at the outset separates algorithmic conclusions from constellation-design conclusions throughout the manuscript.
+
+\section{Motivation} \label{se:motivation}
+The practical motivation is straightforward. A debris-debris collision can produce thousands of fragments, and those fragments can remain in operationally important altitude-inclination bands for years to decades \cite{ESAEnvironment2025,Krisko2014ORDEM,Harada2024NEODEEM}. Because the most consequential events are infrequent, uncertain, and geometry-sensitive, designing a remediation architecture around deterministic average-case assumptions is inadequate. The architecture must instead be judged against shared hazardous-event evidence, explicit uncertainty, and mission-level tradeoffs between service reliability and resource demand.
+
+This study treats uncertainty as part of the design problem from the start. Candidate constellations are not judged on abstract coverage alone. They are judged on whether they can service screened unsafe conjunction opportunities under transfer, timing, and dust-delivery constraints, and on the resource boxes required to cover that hazardous-event cohort. Beta-posterior means and \gls{hpd} bands control adaptive search only. Canonical reporting requires exact service of 58 of the 64 fixed unsafe events and is designed to reconstruct a nondominated maneuver--released-mass front whose points carry the transfer, release, and dust evidence produced by the lane that generated them. Current attainment under the strict lane remains unverified.
+
+The manuscript therefore uses stochastic optimization in its mission-design sense: uncertainty enters the objective and constraints through event sampling, state knowledge, transfer feasibility, and dust-cloud evolution, while randomized metaheuristics are used as computational tools for exploring the resulting mixed design landscape. Chapter~\ref{ch:litreview} separates those two meanings more formally.
+
+The resulting study is organized around the sequence summarized in \cref{tab:intro_workflow}. The logic begins with a catalogue-grounded event bank, proceeds through transfer selection and dust sizing, and ends in mission-level scoring, optimizer comparison, and constellation interpretation. The later chapters unpack each stage in turn.
+
+\begin{table}[htb]
+    \centering
+    \caption[End-to-end study workflow]{End-to-end workflow used throughout this study.}
+    \label{tab:intro_workflow}
+    \begin{tabularx}{0.90\linewidth}{@{}L{0.22\linewidth}Y@{}}
+        \toprule
+        Stage & Role in the study workflow \\
+        \midrule
+        Unsafe event evidence & Public catalogue data are screened into a reusable bank of hazardous conjunction opportunities. \\
+        Transfer selection & Candidate deployers are screened and refined into physically admissible intercept plans. \\
+        Dust mass logic & Event feasibility is gated by intercepted-mass physics before released mass is scored on the encounter plane. \\
+        Mission scoring & Exact event-count coverage and nondominated maneuver--released-mass boxes are reconstructed over the hazardous-event cohort. \\
+        Optimizer comparison & Architecture and optimizer families are compared under the same evidence and the same mission semantics. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Orbital Debris as a System-Level Design Problem}
+The debris problem is often described through collision probability, catalog growth, or post-mission disposal policy, but from a systems perspective it is better understood as a coupled feedback process. Launch activity, mission operations, fragmentation events, environmental persistence, and tracking capability all influence one another. High-value operational shells attract more traffic; more traffic raises the rate of close approaches; fragmentation events inject additional objects into those same bands; and incomplete observability means the true risk environment is always only partially known \cite{ESAEnvironment2025,Matney2025ORDEM4,Muciaccia2024LEOCapacity}. For this reason, the relevant design question is not simply whether a given conjunction can be retired, but whether a reusable mitigation architecture can reduce endogenous risk without introducing disproportionate new burdens in fuel demand, released material, or operational complexity.
+
+This system-level framing matters directly for the present study. A one-off intervention can be evaluated mainly on whether it changes the geometry of a single threatening encounter. A reusable service architecture has to be evaluated on where deployers are staged, which orbital bands they can access repeatedly, how long they need to prepare an intercept, how uncertainty affects both event screening and dust delivery, and how mission resources accumulate across many potential remediations. The design variable is therefore the service architecture operating over a population of hazardous events, not just a maneuver or a dust release.
+
+The study examines three constellation families that span a range of architectural structure: Walker constellations parameterized by shell altitude, inclination, plane count, satellites-per-plane count, and phasing; Flower constellations adding eccentricity, argument of perigee, and a bounded combination index under a bounded \(J_2\)-secular repeat-groundtrack specialization; and Dual-Shell Walker-Delta constellations carrying per-shell altitude, inclination, topology, and phasing plus second-shell \glsentryshort{raan} and mean-anomaly offsets. All three are analytically structured, and every family shares the same \SIrange{350}{2000}{\kilo\metre} realized radial envelope and the same 40-satellite cap. An unstructured plane-constrained encoding, with a fixed three-plane by five-satellite layout carrying per-plane altitude, inclination, \glsentryshort{raan}, and phase freedom, was scoped as a fourth family but is not implemented in the reported evaluation stack and is not evaluated in this work.
+
+The architecture must also respond to an asymmetry that distinguishes debris-debris encounters from many active-spacecraft conjunctions. An active spacecraft can often maneuver itself. Two non-maneuverable objects cannot. This asymmetry helps explain why the debris problem remains operationally under-served even though conjunction assessment itself is now a mature activity. A debris-remediation architecture must therefore supply mobility, timing control, and intervention capability from outside the conjunction pair. The deployer constellation is the mechanism that provides that missing control authority.
+
+For this reason, the manuscript treats debris remediation as a design-under-uncertainty problem rather than as a purely astrodynamical calculation. The event set is uncertain, the transfer feasibility is uncertain, the delivered dust density is uncertain, and the mission-level meaning of ``good performance'' cannot be reduced to a single deterministic scalar. The technical challenge is to organize those uncertainties in a way that is both scientifically defensible and computationally manageable.
+
+\section{Dust-Enabled JCA as an Architecture Problem}
+Dust-enabled \gls{jca} is especially useful for studying this question because it couples a low-impulse intervention concept to a demanding systems problem. The basic actuation idea is simple: if a threatening debris object is perturbed early enough, even a small change in velocity can alter the conjunction geometry enough to retire the event. The operational realization is not simple. The deployer must be in a favorable orbital region, the transfer must be feasible within the available lead time, the dust cloud must reach the target with sufficient geometric coverage, and the resulting intervention must meet both physical and mission-level acceptance criteria.
+
+These requirements make architecture design central. A deployer constellation that is excellent for broad nominal coverage may still be poor for time-critical event access. Conversely, a constellation that is efficient for a few favored orbital bands may fail to provide sufficient reach across the actual hazardous-event population. The dissertation therefore treats the deployer constellation, the transfer workflow, and the dust-delivery logic as parts of the same system. The methodology begins with a reusable event bank and ends with mission-level scoring because the architecture is judged by how it behaves across the hazardous-event evidence it is meant to service.
+
+The dust concept also sharpens the role of uncertainty propagation. A deterministic intercept point is not enough; what matters is the overlap between the uncertain target location and the evolving dust-cloud density at the encounter plane. Catalogue pair screening and search-lane transfer selection use MF/\(J_2\) physics with high-fidelity acceptance disabled, while each admitted conjunction anchor is refined under strict HF propagation; every cell searches on that same physics, and the hybrid lane enables high-fidelity propagation with required HF transfer correction only at the blinded 64-event (H64) canonical replay, which carries its own strict authority. \Cref{se:discussion_limits} records which of those lanes actually executed in the reported campaign. The compiled single-Gaussian Julier-7 transform then preserves the separation between intercepted-mass sufficiency and Pc-inverted released population mass.
+
+Dust-enabled \gls{jca} is also narrow enough to support a focused manuscript. The study does not attempt to solve every aspect of debris remediation. It concentrates on the design of an uncertainty-aware response architecture for hazardous debris-debris conjunctions over short horizons. That narrower scope makes it possible to connect environmental evidence, transfer solving, uncertainty propagation, and multiobjective optimization within one consistent framework.
+
+\subsection{Research Questions \& Objectives} \label{ss:research_questions}
+The study is guided by seven research questions that move from representation and physical modeling to architecture and optimization:
+
+\begin{enumerate}
+  \item \label{rq:debris-repr}
+        How should the debris environment and hazardous-event evidence be represented so that the optimization problem is grounded in physically meaningful conjunctions rather than in abstract synthetic proxies?
+
+  \item \label{rq:cost-architecture}
+        What transfer logic, staging geometry, and operating rules are required for a dust-enabled \gls{jca} service to be physically defensible and operationally responsive?
+
+  \item \label{rq:ea-selection}
+        What descriptive differences in physical-front quality and realized-work behavior appear among optimizer methods on the resulting mixed discrete-continuous, event-driven, and stochastic design landscape under a shared single-realization evidence protocol, and what campaign shape would be required to place uncertainty bounds on those differences?
+
+  \item \label{rq:hybrid-opt}
+        What does seeded, architecture-aware initialization contribute to convergence stability and solution quality, and where does local refinement fail to provide a reliable advantage?
+
+  \item \label{rq:efficient-sim}
+        How should model fidelity be allocated so that bulk search remains efficient while acceptance-critical decisions remain physically credible?
+
+  \item \label{rq:uncertainty-encoding}
+        How should uncertainty be encoded in the evaluation itself so that reliability and resource demand are measured on consistent semantics?
+
+  \item \label{rq:walker-sufficiency}
+        Are structured single-shell constellations sufficient for the mission, or do structured multi-shell and resonant repeating-groundtrack architectures provide meaningful advantages within the same event-level mission semantics?
+\end{enumerate}
+
+These questions map directly onto the methods developed in \cref{ch:methods}. \Cref{rq:debris-repr} is addressed through the catalogue-first event workflow, in which the dissertation's canonical event banks are generated offline from hash-pinned Space-Track \gls{omm} and \gls{satcat} captures, screened by a deterministic mean-\(J_2\) natural-pair scan, and refined to strict-HF unsafe conjunctions carrying paired osculating-\gls{gcrs} and mean screening anchors; the older surrogate debris generators are reported as historical exploratory work rather than as a current sensitivity lane (\cref{se:debrisstats}). \Cref{rq:cost-architecture} and \cref{rq:efficient-sim} are addressed through the mission concept, transfer solver, event-level dust-mass logic, and mixed-fidelity propagation policy (\cref{se:mission,se:transfer-solver,se:dustmass,se:simulation}). \Cref{rq:ea-selection} is addressed through the six-method optimizer matrix under a single-realization descriptive protocol, \cref{rq:hybrid-opt} through the \texttt{PRNSDE} local-refinement contrast under uniform-random initialization, and \cref{rq:walker-sufficiency} through the structured single-shell versus structured multi-shell and resonant constellation study (\cref{se:constellations,se:optimalgos,se:optsetup}). \Cref{rq:uncertainty-encoding} is addressed through the mission objectives, constraints, and dust-propagation framework (\cref{se:objectives,se:constraints,se:dustprop}).
+
+Operationally, the study adopts a specific baseline. Event evidence is unsafe-only and catalogue-grounded; Beta-posterior and \gls{hpd} statistics control adaptive search; and canonical resource fronts require exact service of \(\lceil0.9\times64\rceil=58\) unsafe events. Every event retains multiple verified transfer--release alternatives before finite-bank maneuver--mass coverage boxes are formed. Dust-cloud uncertainty uses one Gaussian propagated by the seven-point Julier simplex, with one fixed spherical-equivalent dust tuple across all points.
+
+\section{Scope and Contributions}
+This work makes four primary contributions.
+
+\begin{enumerate}
+    \item It defines a catalogue-grounded hazardous-event workflow that treats conjunction evidence as a reusable design input rather than as an ad hoc afterthought.
+    \item It formulates dust-enabled \gls{jca} as a deployer-architecture problem in which transfer feasibility, dust-mass logic, and mission reliability are evaluated together.
+    \item It develops a layered uncertainty-propagation and scoring framework, enabled by a custom multi-method Rust propagator using Battin's numerically stable Encke formulation, that keeps short-horizon remediation studies tractable without forcing every stage to use the same fidelity.
+    \item It compares three constellation families (Walker, Flower, and Dual-Shell Walker-Delta) across six optimizer methods spanning differential evolution, dominance-based and \(\varepsilon\)-dominance evolutionary algorithms, geometry-aware survivor selection, and particle swarm, all under a shared mission evaluation protocol with common-random-number evidence control so that algorithmic and architectural conclusions rest on the same evidence.
+\end{enumerate}
+
+Just as important are the study's deliberate boundaries. The dissertation does not claim to present a flight-ready operational system. It does not attempt a full legal or governance treatment of remediation deployment, nor does it build an end-to-end post-intervention traffic-management architecture. Its contribution is methodological and architectural: it provides a defensible framework for evaluating when a dust-enabled \gls{jca} service might be effective, what physical and computational assumptions it requires, and how architecture choices interact with reliability and mission burden.
+
+Those contributions are summarized in \cref{tab:intro_contrib_map}, which maps the scientific role of each contribution to the chapters in which it is developed most fully. The corresponding scope boundaries are stated in \cref{tab:intro_scope_boundaries}.
+
+\begin{table}[htb]
+    \centering
+    \caption[Contribution map for Chapters 1--3]{Contribution map for the manuscript front matter and methods core.}
+    \label{tab:intro_contrib_map}
+    \begin{tabularx}{0.92\linewidth}{@{}L{0.25\linewidth}L{0.28\linewidth}Y@{}}
+        \toprule
+        Contribution area & Core idea & Primary chapter anchor \\
+        \midrule
+        Hazardous-event evidence & Catalogue-grounded unsafe conjunction bank with reusable evaluation semantics & \cref{ch:methods} \\
+        Transfer and dust logic & Event-level transfer solving, intercepted-mass gating, and released-mass objective accounting & \cref{ch:methods} \\
+        Uncertainty-aware mission scoring & Beta/\gls{hpd} adaptive-search control and exact \(q=0.9\) finite-bank coverage-box Pareto fronts & \cref{ch:methods} \\
+        Architecture and optimizer comparison & Three structured constellation families under shared event evidence & \crefrange{ch:litreview}{ch:methods} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Evaluation Philosophy}
+Before turning to the literature review and methods chapter, one framing point matters. The study is intentionally conservative in how it judges architecture quality. Candidate constellations are evaluated on hazardous-event evidence rather than nominal coverage surrogates; Beta-posterior and \gls{hpd} diagnostics govern adaptive search only; and canonical resource fronts require exact finite-bank event coverage with full transfer/release/Pc support. These are methodological commitments, not presentation choices.
+
+Four method commitments carry that philosophy through the manuscript: catalogue-first hazardous-event evidence, conservative reliability semantics, separation between physical event gates and optimized mission objectives, and matched evidence across optimizer families. Together they prevent the architecture comparison from being driven by easy-event dilution, inconsistent stochastic samples, or hidden changes in mission value.
+
+This conservative evaluation philosophy reflects the problem setting. A remediation architecture that appears attractive only because easy events dominate its score is not operationally persuasive. A design that looks efficient only because demanding feasible events are diluted inside an optimistic resource summary is likewise misleading. The dissertation therefore prefers event-bank realism, explicit failure bookkeeping, and mission-level summaries that keep hazardous-event burden visible rather than rewarding numerical optimism.
+
+That philosophy also explains why the manuscript is written as an architecture study rather than as a maneuver study. The central object of interest is not a single dust intervention in isolation; it is a reusable service that must behave credibly across a structured hazardous-event population. The literature review and methods chapter that follow should therefore be read through that lens: each modeling choice is motivated by whether it helps evaluate a remediation architecture honestly, not merely by whether it simplifies one isolated event calculation.
+
+\begin{table}[htb]
+    \centering
+    \caption[Study scope boundaries]{Primary scope boundaries for the manuscript front end and methods core.}
+    \label{tab:intro_scope_boundaries}
+    \begin{tabularx}{0.92\linewidth}{@{}L{0.21\linewidth}L{0.27\linewidth}Y@{}}
+        \toprule
+        Boundary area & In scope & Out of scope \\
+        \midrule
+        Event evidence & Hazardous-event construction and reuse from public catalogue data & A universal model of all future debris traffic states \\
+        Service design & Deployer architecture, transfer logic, dust sizing, and mission scoring & Flight hardware, propulsion/propellant sizing, launch mass, fleet cost, or stakeholder-ready operations \\
+        Canister and dust scope & Fixed spherical-equivalent trajectory bodies and Pc-inverted dust population mass & Canister capacity, payload mesh, grain/deployment hardware design, or hardware-feasibility claims \\
+        Uncertainty treatment & Short-horizon uncertainty propagation relevant to hazardous-event servicing & Full long-horizon uncertainty closure for every post-intervention environmental effect \\
+        Architecture comparison & Three structured constellation families under shared evidence & Unstructured plane-constrained encodings, which are scoped but not evaluated here, and exhaustive search over every conceivable orbital architecture family \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Manuscript Organization}
+The remainder of the manuscript follows the structure of the problem itself. Chapter~\ref{ch:litreview} reviews the relevant literature in constellation design, optimization under uncertainty, and debris remediation, and identifies the gap that motivates the present work. Chapter~\ref{ch:methods} then defines the methodology in detail, from event-bank construction and transfer solving through dust-mass accounting, uncertainty propagation, and mission-level scoring. Chapter~\ref{ch:results} reports the evidence in two parts: Part~A compares optimizer families under matched evidence and mission semantics, while Part~B interprets what the supported fronts imply about deployer siting and access geometry. Chapter~\ref{ch:discussion} explains the scope of those patterns, Chapter~\ref{ch:conclusions} states the dissertation-level conclusions warranted by the evidence, and Chapter~\ref{ch:summary} closes with a short synthesis of the contribution chain and future extensions.
+
+That ordering is deliberate. Because the study is interdisciplinary, the reader needs both a systems picture and a precise methods picture before the results can be interpreted correctly. Chapters~1--3 therefore do more setup work than they would in a purely single-discipline project: they establish why the problem matters, what prior work leaves unresolved, and how the present study turns that gap into a defensible evaluation workflow before the back half interprets the resulting evidence.
+
+\begin{table}[htb]
+    \centering
+    \caption[Reader roadmap]{Reader roadmap for the manuscript.}
+    \label{tab:intro_reader_roadmap}
+    \begin{tabularx}{0.92\linewidth}{@{}L{0.16\linewidth}L{0.22\linewidth}Y@{}}
+        \toprule
+        Chapter & Primary reader question & Role in the manuscript argument \\
+        \midrule
+        Chapter 1 & Why does this problem matter, and what is being claimed? & Establishes the debris-remediation motivation, the architecture framing, and the study's conservative evaluation philosophy. \\
+        Chapter 2 & What does prior work solve, and what gap remains? & Synthesizes constellation, optimization, and remediation literatures to identify the precise unresolved problem. \\
+        Chapter 3 & How is the proposed architecture actually evaluated? & Defines the methodology: event evidence, transfer logic, dust sizing, uncertainty propagation, and mission scoring. \\
+        Chapter 4 & What evidence exists, and what is it allowed to support? & States the Part~A evidence contract and the historical campaign record, and scopes the Part~B architecture interpretation to a post-correction matrix. \\
+        Chapter 5 & How far do the patterns travel? & Closes each research question against its evidence, and states the limits: no replicates, no strict-HF execution in the reported campaign, unprovenanced sizing threshold, no covariance realism. \\
+        Chapter 6 & What is concluded, and what is held? & Names the four methodological contributions and the claims that remain held until a reconstructed campaign exists. \\
+        Chapter 7 & What is the one-paragraph takeaway? & Closes on the contribution chain and the next research layer. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

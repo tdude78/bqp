@@ -1,0 +1,170 @@
+# dust_transfer — Python bindings (PyO3/maturin) over the Rust transfer
+# optimizer (`two_phase_transfer_rs`) and the high-fidelity propagator
+# (`lightyear_odeint_rs`). The `crates/` tree is copied verbatim from the
+# nasa_dust_rust workspace; this root crate is the only new code.
+
+[package]
+name = "dust_transfer"
+version = "0.1.0"
+edition = "2021"
+license-file = "LICENSE.md"
+publish = false
+description = "Python bindings for the two-phase transfer optimizer and the Lightyear high-fidelity propagator"
+
+[lib]
+name = "dust_transfer"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.29", features = ["extension-module", "abi3-py310"] }
+numpy = "0.29"
+anyhow = { workspace = true }
+two_phase_transfer_rs = { workspace = true }
+lightyear_odeint_rs = { workspace = true, features = ["autodiff"] }
+satpy_core = { workspace = true }
+
+[workspace.lints.clippy]
+pedantic = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+# `suboptimal_flops` asks for `mul_add`. Fusing a multiply and an add into an
+# FMA changes the result: the intermediate product is no longer rounded to
+# binary64. This workspace pins floating-point evaluation order end to end --
+# the sealed strict-HF and rect-loop digests, the Orekit-compatible JB2008
+# density path, the ERFA frame-time polynomials, and the Lambert result
+# identity all depend on it, and FMA contraction is one of the three axes a
+# bit-exact pin is sensitive to. So the lint's advice is not merely unwanted
+# here, it is a trap: following it moves bits and breaks the pins.
+#
+# It used to be suppressed at 300 individual sites, each with a hand-written
+# `reason` restating that same fact -- 1,218 lines of noise, and 300 chances to
+# accidentally write the suppression rather than think about the arithmetic.
+# Denied-with-blanket-escapes is not a policy; this is.
+#
+# This changes no code generation. Rust never contracts to FMA on its own, so
+# turning the lint off cannot move a bit by itself -- only writing `mul_add`
+# would, and that remains a deliberate, reviewable act.
+suboptimal_flops = "allow"
+# `tuple_array_conversions` wants `[a, b, c]` <-> `(a, b, c)` to go through
+# `.into()`. Every site it fires on here is a destructure that names its
+# components -- `let (ax, ay, az) = gravity_summation(..)?; Ok([ax, ay, az])`,
+# `|([dv, mass], keep)| keep.then_some((dv, mass))`. Taking the advice deletes
+# the names and leaves an `.into()` whose element order the reader has to go
+# find. For an acceleration triple or a (delta-v, mass) pair, that order is the
+# whole meaning.
+tuple_array_conversions = "allow"
+unwrap_used = "deny"
+expect_used = "deny"
+indexing_slicing = "deny"
+arithmetic_side_effects = "deny"
+unreachable = "deny"
+unimplemented = "deny"
+unchecked_time_subtraction = "deny"
+todo = "deny"
+string_slice = "deny"
+panic_in_result_fn = "deny"
+panic = "deny"
+exit = "deny"
+as_conversions = "deny"
+
+[workspace.lints.rust]
+# `dust_estimates_rs` gates its diagnostic allocator on this cfg. Keeping the
+# declaration at workspace scope lets every member inherit one lint policy.
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(nasa_dust_dhat_global_alloc)',
+] }
+
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.dependencies]
+# --- internal crates (flat layout) ---
+common_rs = { path = "crates/common_rs" }
+satpy_core = { path = "crates/satpy_core" }
+jb_rs = { path = "crates/jb_rs" }
+lightyear_odeint_rs = { path = "crates/lightyear_odeint_rs", default-features = false }
+dust_estimates_rs = { path = "crates/dust_estimates_rs", default-features = false }
+dust_splitting_rs = { path = "crates/dust_splitting_rs", default-features = false }
+dust_ukf_rs = { path = "crates/dust_ukf_rs" }
+pareto_rs = { path = "crates/pareto_rs" }
+two_phase_transfer_rs = { path = "crates/two_phase_transfer_rs" }
+
+# --- new port crates (created in later waves; paths pre-declared) ---
+nd_armor = { path = "crates/nd_armor" }
+nd_config = { path = "crates/nd_config" }
+nd_sched = { path = "crates/nd_sched" }
+nd_pipeline = { path = "crates/nd_pipeline" }
+nd_optimizer = { path = "crates/nd_optimizer" }
+nd_driver = { path = "crates/nd_driver" }
+nd_archive = { path = "crates/nd_archive" }
+nd_runtime_trace = { path = "crates/nd_runtime_trace" }
+
+# --- external deps (copied from oracle) ---
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+# float_roundtrip: correctly-rounded float parser required for CPython rows_hash
+# byte-parity (default serde_json parser is 1 ULP off and breaks the 24-event hash).
+serde_json = { version = "1.0", features = ["float_roundtrip"] }
+sha2 = "0.10"
+rtrb = "=0.3.4"
+nalgebra = { version = "0.35", default-features = false, features = ["std"] }
+num-traits = "0.2"
+ordered-float = "5.3"
+approx = "0.5.1"
+wide = "1.3"
+pdqsort = "1.0"
+smallvec = { version = "1.15", features = ["union", "const_generics"] }
+rand = "0.10"
+rand_xoshiro = "0.8"
+rayon = "1.12.0"
+parking_lot = "0.12"
+arc-swap = "1.9"
+rustc-hash = "2.1"
+memmap2 = "0.9"
+libc = "0.2.185"
+criterion = "0.8"
+# Userspace sampling profiler for the wall-clock profiles. `perf`/`samply` need
+# perf_event_open, and the production node runs perf_event_paranoid=2 with no
+# sudo; pprof drives setitimer(ITIMER_PROF)+SIGPROF instead, so that setting is
+# irrelevant. default-features off on purpose: the default `backtrace_rs`
+# backend discards the ucontext and cannot attribute self time to the leaf.
+# Only `framehop-unwinder` starts the walk at the interrupted PC.
+pprof = { version = "0.15", default-features = false, features = ["framehop-unwinder", "flamegraph"] }
+
+# --- new deps for the port (serialization / armor / cli / concurrency) ---
+blake2 = "0.10"
+base64 = "0.23"
+serde_yaml = "0.9"
+clap = { version = "4.5", features = ["derive"] }
+walkdir = "2.5"
+tempfile = "3.13"
+
+# Release profile: same optimisation level and LTO as the source workspace.
+# `panic = "unwind"` (the source workspace aborts) so a Rust panic surfaces as a
+# Python exception instead of killing the interpreter.
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+incremental = false
+panic = "unwind"
+overflow-checks = false
+debug-assertions = false
+debug = false
+strip = "symbols"
+split-debuginfo = "off"
+
+[profile.release.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 0
+debug = true
+incremental = true
+split-debuginfo = "off"
+
+[profile.test]
+split-debuginfo = "off"
+
+[profile.bench]
+split-debuginfo = "off"

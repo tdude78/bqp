@@ -1,0 +1,50 @@
+{
+  "schema": "jb2008_offline_data_authority_v1",
+  "retrieved_utc": "2026-07-19T00:06:29Z",
+  "source": {
+    "publisher": "Space Environment Technologies (SET)",
+    "indices_base_url": "https://sol.spacenvironment.net/JB2008/indices/",
+    "immutability_policy": "verbatim_download_sha256_and_size_locked"
+  },
+  "required_catalogue_coverage": {
+    "start_utc_date": "2021-11-09",
+    "end_utc_date": "2022-11-11",
+    "max_input_lag_days": 5,
+    "effective_driver_start_utc_date": "2021-11-04"
+  },
+  "files": {
+    "SOLFSMY.TXT": {
+      "url": "https://sol.spacenvironment.net/JB2008/indices/SOLFSMY.TXT",
+      "size_bytes": 829301,
+      "sha256": "2e8f31bd3294b1982b23bb475b560f00593c90ec0c3e50667ce4e068794efe80",
+      "release_header": "F10, S10, M10, Y10 data release 8_1_0 (18-Jul-2026 23:38:04.00) by Space Environment Technologies",
+      "source_declared_record_count": 10926,
+      "parsed_coverage": {
+        "first_year_day": "1997-001",
+        "last_year_day": "2026-154",
+        "first_utc_date": "1997-01-01",
+        "last_utc_date": "2026-06-03",
+        "record_count": 10746
+      }
+    },
+    "DTCFILE.TXT": {
+      "url": "https://sol.spacenvironment.net/JB2008/indices/DTCFILE.TXT",
+      "size_bytes": 1182060,
+      "sha256": "e0d44fc1dbb176693159ebd98ee481319a207c623d7b954509bc404d4aac7594",
+      "parsed_coverage": {
+        "first_year_day": "1997-001",
+        "last_year_day": "2026-154",
+        "first_utc_date": "1997-01-01",
+        "last_utc_date": "2026-06-03",
+        "record_count": 10746
+      }
+    }
+  },
+  "license": {
+    "acknowledged": true,
+    "local_file": "License.html",
+    "source_url": "https://sol.spacenvironment.net/JB2008/License.html",
+    "size_bytes": 9094,
+    "sha256": "9d2ec826044266557880c7863443ac2609312db39780b1c8239f5578dd75d387"
+  }
+}

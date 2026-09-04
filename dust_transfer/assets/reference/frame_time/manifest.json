@@ -1,0 +1,94 @@
+{
+  "authority_label": "ERFA 2.0.1 / SOFA 20231011-derived",
+  "erfa_source": {
+    "aggregate_algorithm": "sorted_path_nul_decimal_size_nul_contents_v1",
+    "aggregate_path_root": "erfa",
+    "aggregate_sha256": "0155ec199de5e4d0279ab9655a9b980ac6f731be6c994ba795858e93a1204d1a",
+    "aggregate_size_bytes": 2247348,
+    "archive_format": "ustar_gzip_no_name_no_time",
+    "archive_member_prefix": "erfa/src/",
+    "c_file_count": 251,
+    "compile_exclusions": [
+      "erfa/src/t_erfa_c.c",
+      "erfa/src/t_erfa_c_extra.c"
+    ],
+    "erfa_version": "2.0.1",
+    "h_file_count": 4,
+    "pyerfa_version": "2.0.1.5",
+    "regular_member_count": 255,
+    "sofa_version": "20231011",
+    "source_kind": "reconstructed_pyerfa_sdist_transport"
+  },
+  "payloads": [
+    {
+      "path": "assets/reference/frame_time/README.md",
+      "sha256": "ddc7f18a00a0411707ab710e9bc94e033ec2de2ecebf5b5f3f48dc05aacc6771",
+      "size_bytes": 1778
+    },
+    {
+      "path": "assets/reference/frame_time/USNO_PUBLIC_RELEASE_RECEIPT.md",
+      "sha256": "fd0e4a61c05c9f8117abf4aac036f5f6e61755bdc9b6558076cbd608f6a7deaf",
+      "size_bytes": 1492
+    },
+    {
+      "path": "assets/reference/frame_time/erfa-2.0.1-sofa-20231011-source.tar.gz",
+      "sha256": "9ad0e5a4eba41ee1e481d01475ba0bc2546df5303c495387cd2771381cc200f4",
+      "size_bytes": 323547
+    },
+    {
+      "path": "assets/reference/frame_time/ERFA_LICENSE",
+      "sha256": "b1858f9a263f22c438a455a32945da51a31a0ae25a21055da13bb7ed57cc3b51",
+      "size_bytes": 2651
+    },
+    {
+      "path": "assets/reference/frame_time/ERFA_CONFIGURE_AC",
+      "sha256": "58bce94b6e33f4ad557a42d92cc2d1f2997175eb401cbf0f17e627459c3ba94c",
+      "size_bytes": 941
+    },
+    {
+      "path": "assets/reference/frame_time/ERFA_README.rst",
+      "sha256": "3c25fac03be6f4921736f3d8d16575a90e775da07c58e8d58a25ed7622fa2b32",
+      "size_bytes": 6878
+    },
+    {
+      "path": "assets/reference/frame_time/PYERFA_PKG_INFO",
+      "sha256": "49b55a0cc45bf378b3be1010dff553e619116d4589a8dfc2299e96faa8197073",
+      "size_bytes": 5743
+    },
+    {
+      "path": "assets/reference/frame_time/tai-utc.dat",
+      "sha256": "3524e1ae34d67e858873a89e59983bbc5bd100221da898e796c1b36036a310c3",
+      "size_bytes": 3321
+    },
+    {
+      "path": "assets/reference/frame_time/finals2000A.all",
+      "sha256": "f707ea5031a467f1a3b2f0645fac2f627095ed0cb41d34c515b495cb81a5a25d",
+      "size_bytes": 3756992
+    },
+    {
+      "path": "assets/reference/frame_time/ReadMe.finals2000A",
+      "sha256": "3efb2c610012360391aed5c057489ff74539b78494a66b7f9b342d1843db9254",
+      "size_bytes": 1830
+    }
+  ],
+  "schema": "part_a_frame_time_manifest_v1",
+  "semantic_sha256": "63240be055032b58d31b42fcb76eddfbeb78d750a6e2aff989d124dabdc5fe05",
+  "usno": {
+    "finals2000a_complete_eop_first_mjd": "41684.00",
+    "finals2000a_complete_eop_last_mjd": "61328.00",
+    "finals2000a_complete_eop_records": 19645,
+    "finals2000a_first_record_mjd": "41684.00",
+    "finals2000a_last_record_mjd": "61667.00",
+    "finals2000a_total_records": 19984,
+    "retrieved_on": "2026-07-23",
+    "urls": {
+      "bulletin_a_product": "https://maia.usno.navy.mil/products/bulletin-a",
+      "finals2000a": "https://maia.usno.navy.mil/ser7/finals2000A.all",
+      "finals2000a_format": "https://maia.usno.navy.mil/ser7/readme.finals2000A",
+      "leap_second_product": "https://maia.usno.navy.mil/products/leap-second",
+      "privacy_notice": "https://aa.usno.navy.mil/about/PrivacyNotice",
+      "series7": "https://maia.usno.navy.mil/ser7/",
+      "tai_utc": "https://maia.usno.navy.mil/ser7/tai-utc.dat"
+    }
+  }
+}

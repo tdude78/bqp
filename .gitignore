@@ -1,0 +1,11 @@
+# build products — never commit
+target/
+.venv/
+*.whl
+*.so
+*.dylib
+__pycache__/
+*.pyc
+*.egg-info/
+.DS_Store
+dissertation_source/build_artifacts/

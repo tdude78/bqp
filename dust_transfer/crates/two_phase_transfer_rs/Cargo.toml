@@ -1,0 +1,160 @@
+[package]
+name = "two_phase_transfer_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+description = "Two-phase orbital transfer optimization in Rust"
+
+[lib]
+name = "two_phase_transfer_rs"
+crate-type = ["rlib"]
+bench = false
+
+[dependencies]
+
+# Internal crates
+satpy_core = { workspace = true, features = ["parallel"] }
+nd_sched = { workspace = true }
+# The `lambert_rs` dependency is gone: the solver is `src/lambert{,/}` here. It
+# needed nothing this crate did not already have -- satpy_core, nalgebra,
+# num-traits, wide, rayon and pdqsort are all above.
+lightyear_odeint_rs = { workspace = true, default-features = false, features = ["autodiff"] }
+jb_rs = { workspace = true }
+dust_estimates_rs = { workspace = true }
+dust_splitting_rs = { workspace = true }
+dust_ukf_rs = { workspace = true }
+
+# Numerical computing
+nalgebra = { workspace = true }
+num-traits = { workspace = true }
+ordered-float = { workspace = true }
+wide = { workspace = true }
+
+# Optimization algorithms
+
+# Parallelism & concurrency
+rayon = { workspace = true }
+
+# Utilities
+anyhow = { workspace = true }
+pdqsort = { workspace = true }  # Fast pattern-defeating quicksort
+smallvec = { workspace = true }  # Stack-allocated Vecs for hot paths
+rustc-hash = { workspace = true }  # Fast FxHashMap for integer keys
+# Absorbed with `oxymoo`: the NSGA-II operators and the Nelder-Mead restart
+# draws seed a Xoshiro256++ and nothing else in this crate uses an RNG.
+rand = { workspace = true }
+rand_xoshiro = { workspace = true }
+sha2 = { workspace = true }
+
+[dev-dependencies]
+approx = { workspace = true }  # `relative_eq` in the absorbed NSGA-II tests
+criterion = { workspace = true }
+rayon = { workspace = true }
+# `derive`, for the Orekit/Der fixture the absorbed Lambert oracle deserializes.
+serde = { workspace = true }
+serde_json = { workspace = true }
+pprof = { workspace = true }
+# Benches and tests read the campaign's control values from the config
+# authority rather than restating them. Dev-only: nd_config depends on nothing
+# in this workspace, so this cannot become a cycle and nothing ships with it.
+nd_config = { workspace = true }
+
+[[bench]]
+name = "transfer_planning_bench"
+harness = false
+
+[[bench]]
+name = "allocation_bench"
+harness = false
+
+[[bench]]
+name = "postprocess_summary_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[[bench]]
+name = "front_solve_native_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[[bench]]
+name = "delta_v_anchor_policy_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[[bench]]
+name = "oxymoo_policy_bench"
+harness = false
+required-features = ["bench-internal"]
+
+# Absorbed with `oxymoo`. It drives the NSGA-II kernel directly, which is a
+# private module here, so it runs off the `bench-internal` re-export.
+[[bench]]
+name = "oxymoo_nsga2_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[[bench]]
+name = "profile_lambert_calls"
+harness = false
+
+# Absorbed with `lambert`. All three drive solver entry points that are private
+# here, so they run off the `bench-internal` re-export, the same way
+# `oxymoo_nsga2_bench` does. `lambert_solver_bench` and `lambert_batch_tof_bench`
+# were that crate's own `lambert_bench` and `batch_tof`; `lambert_cpu_baseline_bench`
+# was `satpy_core`'s `lambert_bench`, which named nothing from `satpy_core` and
+# was only there because the CUDA sibling it was written against lives in that
+# crate. Renamed because the three would otherwise collide on two names.
+[[bench]]
+name = "lambert_solver_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[[bench]]
+name = "lambert_batch_tof_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[[bench]]
+name = "lambert_cpu_baseline_bench"
+harness = false
+required-features = ["bench-internal"]
+
+[features]
+# `parallel` is RETIRED (2026-08-14). It was default-on and its only dependent,
+# `nd_pipeline`, took the crate with default features, so no build in the
+# workspace ever selected the serial arm -- and it had rotted: four modules
+# under `solve/` imported `should_use_leaf_parallel`,
+# `restore_evaluation_diagnostics` and `record_anchor_parallel_runs` with no
+# gate of their own, so `cargo check -p two_phase_transfer_rs
+# --no-default-features` failed with five E0432s. The winning arms are now
+# unconditional and `rayon` is a plain dependency. Bit-identical by
+# construction: every build that ever ran already compiled exactly the arms
+# that remain. Same reasoning retired `dust_estimates_rs`'s `parallel` in the
+# same commit; see the note in that manifest.
+# `autodiff` is RETIRED (2026-08-18) for the same reason as `parallel`, in the
+# mirror image: it was default-OFF and no manifest, script or CI lane in the
+# workspace ever named `two_phase_transfer_rs/autodiff`, so no build ever
+# selected its arm. It gated a Newton/DualVec retiming path in `retime.rs` that
+# `use_gradient_retiming()` could only ever answer `false` for, plus L-BFGS
+# reporting in `benches/transfer_planning_bench.rs` whose solver support
+# `solve.rs` had already dropped. An always-false branch in numerical code is a
+# trap -- a reader assumes it runs -- so the arm is gone rather than gated.
+# Nothing removed was ever compiled. The line below still enables
+# `lightyear_odeint_rs`'s same-named but SEPARATE `autodiff`, which is
+# unconditionally on via this crate's dependency declaration and is unaffected.
+bench-internal = []  # Internal Criterion/profiling hooks; never enabled for runtime builds
+# `wallclock-profile` + benches/wallclock_profile.rs RETIRED (2026-08-20):
+# required-features kept the target unbuildable in every workspace lane, and
+# performance is LOCKED (probes/ladders retired campaign-wide).
+# Opt-in blob decomposition; see the note on the lightyear feature.
+profile-symbols = ["lightyear_odeint_rs/profile-symbols"]
+# Feature-only, caller-owned scalar-leg evidence for the closed solver
+# qualification binary. It changes neither production physics nor its public
+# execution API.
+solver-qualification = ["lightyear_odeint_rs/scalar-leg-observer"]
+
+# NOTE: Release profile settings are in workspace root Cargo.toml.
+
+[lints]
+workspace = true

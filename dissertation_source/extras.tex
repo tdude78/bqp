@@ -1,0 +1,198 @@
+\begin{algorithm}[H]
+\caption{Mixture Unscented Transform with Moment-Preserving Axial Splitting (M-UT)}
+\label{alg:mut_moment_split}
+\begin{algorithmic}[1]
+\State \textbf{Inputs:} initial mean $\mu_0\in\mathbb{R}^d$, covariance $P_0\in\mathbb{R}^{d\times d}$; component count $N\ge 1$; split rank \(r\in\{1,2\}\); variance split $\alpha\in[0,1]$; horizon $\tau$; dynamics map $F_{t\to t+\tau}$; UT weights $(w^\mu,w^P)$
+\State \textbf{Outputs:} propagated component moments $\{\mu_i^+,P_i^+\}_{i=1}^N$, mixture weights $W_i=\tfrac{1}{N}$, and recombined moments $(\mu^+,P^+)$
+\Statex
+
+\State \textbf{Eigenstructure and subspace split}
+\State Compute $P_0 = U\,\mathrm{diag}(\lambda)\,U^\top$ with $\lambda_1\ge\dots\ge\lambda_d$
+\State Set $r \gets \texttt{split\_rank}$; $U_r \gets U_{(:,1\!:\!r)}$, $\Lambda_r \gets \mathrm{diag}(\lambda_{1:r})$
+\State $P_{\parallel} \gets U_r \Lambda_r U_r^\top$;\quad $P_{\perp} \gets P_0 - P_{\parallel}$
+\State $\Sigma \gets (1-\alpha^2)\,P_{\parallel} + P_{\perp}$ \Comment{within-component covariance (common to all components)}
+
+\Statex
+\State \textbf{Isotropic point set in principal subspace}
+\If{$r=0$ \textbf{or} $N=1$}
+  \State $Z \gets \mathbf{0}_{0\times N}$
+\ElsIf{$N=2r+1$}
+  \State Axial layout: $Z\in\mathbb{R}^{r\times N}$ with columns $\{0,\pm c\,e_1,\ldots,\pm c\,e_r\}$, $c=\sqrt{N/2}$
+\ElsIf{$N=r+1$}
+  \State Regular simplex: build $Z$ from an orthonormal basis of the subspace orthogonal to $\mathbf{1}_N$ so that $\tfrac{1}{N}ZZ^\top=I_r$
+\Else
+  \State Random-whitened: draw $G\sim\mathcal{N}(0,I_{r\times N})$, center columns, then set $Z\gets C^{-1/2}G$ where $C=\tfrac{1}{N}GG^\top$
+\EndIf
+\State Ensure $\tfrac{1}{N}ZZ^\top=I_r$ (by construction in each case)
+
+\Statex
+\State \textbf{Component means, covariances, and weights}
+\State $L_r \gets U_r\,\Lambda_r^{1/2}$
+\State $\Delta \gets \alpha\,L_r Z\in\mathbb{R}^{d\times N}$
+\For{$i=1$ \textbf{to} $N$}
+  \State $\mu_i \gets \mu_0 + \Delta_{(:,i)}$
+  \State $P_i \gets \Sigma$
+  \State $W_i \gets 1/N$
+\EndFor
+\If{verification is enabled}
+  \State Check $\sum_i W_i\mu_i = \mu_0$ and $\sum_i W_i\!\big(P_i+(\mu_i-\mu_0)(\mu_i-\mu_0)^\top\big)=P_0$ (raise on failure)
+\EndIf
+
+\Statex
+\State \textbf{Per-component UT propagation}
+\For{$i=1$ \textbf{to} $N$}
+  \State Generate $(2d+1)$ $\sigma$-points $\{\chi_{i,c}\}$ for $\mathcal{N}(\mu_i,P_i)$ with weights $(w^\mu,w^P)$
+  \State Propagate: $\chi_{i,c}^+ \gets F_{t\to t+\tau}(\chi_{i,c})$
+  \State Rebuild: $\mu_i^+ \gets \sum_{c} w^\mu \chi_{i,c}^+$;\quad
+         $P_i^+ \gets \sum_{c} w^P(\chi_{i,c}^+-\mu_i^+)(\chi_{i,c}^+-\mu_i^+)^\top$
+\EndFor
+
+\Statex
+\State \textbf{Mixture recombination (exact first two moments)}
+\State $\mu^+ \gets \sum_{i=1}^N W_i\,\mu_i^+$
+\State $P^+ \gets \sum_{i=1}^N W_i\!\Big(P_i^+ + (\mu_i^+-\mu^+)(\mu_i^+-\mu^+)^\top\Big)$
+
+\State \textbf{Return} $\{\mu_i^+,P_i^+\}_{i=1}^N$, $\{W_i\}_{i=1}^N$, and $(\mu^+,P^+)$
+\end{algorithmic}
+\end{algorithm}
+
+
+%       File: VTthesis_template.tex
+%     Created: Thu Mar 24 11:00 AM 2016 EDT
+%     Last Change: August 15, 2024
+%     Author: Alan M. Lattimer, VT
+%	  With modifications by Carrie Cross, Robert Browder, and LianTze Lim. 
+%
+% This template is designed to operate with XeLaTeX.
+%
+% All elements in the Title, Abstract, and Keywords MUST be formatted as text and NOT as math.
+%
+%Further instructions for using this template are embedded in the document. Additionally, there are comments at the end of the file that give suggestions on writing your thesis.  
+%
+%In addition to the standard formatting options, the following options are defined for the VTthesis class: proposal, prelim, doublespace, draft. 
+
+
+
+%****************************************************************************
+% Below are some general suggestions for writing your dissertation:
+%
+% 1. Label everything with a meaningful prefix so that you
+%    can refer back to sections, tables, figures, equations, etc.
+%    Usage \label{<prefix>:<label_name>} where some suggested
+%    prefixes are:
+%			ch: Chapter
+%     		se: Section
+%     		ss: Subsection
+%     		sss: Sub-subsection
+%			app: Appendix
+%     		ase: Appendix section
+%     		tab: Tables
+%     		fig: Figures
+%     		sfig: Sub-figures
+%     		eq: Equations
+%
+% 2. The VTthesis class provides for natbib citations. You should upload
+%	 one or more *.bib bibtex files. Suppose you have two bib files: some_refs.bib and 
+%    other_refs.bib.  Then your bibliography line to include them
+%    will be:
+%      \bibliography{some_refs, other_refs}
+%    where multiple files are separated by commas. In the body of 
+%    your work, you can cite your references using natbib citations.
+%    Examples:
+%      Citation                     Output
+%      =======================================================
+%      \cite{doe_title_2016}        [18]
+%      \citet{doe_title_2016}       Doe et al. [18]
+%      \citet*{doe_title_2016}      Doe, Jones, and Smith [18]
+%
+%    For a complete list of options, see
+%      https://www.ctan.org/pkg/natbib?lang=en
+%
+% 3. Here is a sample table. Notice that the caption is centered at the top. Also
+%    notice that we use booktabs formatting. You should not use vertical lines
+%    in your tables.
+% 
+%				\begin{table}[htb]
+%					\centering
+%					\caption{Approximate computation times in hh:mm:ss for full order 						versus reduced order models.}
+%					\begin{tabular}{ccc}
+%						\toprule
+%						& \multicolumn{2}{c}{Computation Time}\\
+%						\cmidrule(r){2-3}
+%						$\overline{U}_{in}$ m/s & Full Model & ROM \\
+%						\midrule
+%						0.90 & 2:00:00 & 2:08:00\\
+%						0.88 & 2:00:00 & 0:00:03\\
+%						0.92 & 2:00:00 & 0:00:03\\
+%						\midrule
+%						Total & 6:00:00 & 2:08:06\\
+%						\bottomrule
+%					\end{tabular}
+%					\label{tab:time_rom}
+%				\end{table}
+% 
+% 4. Below are some sample figures. Notice the caption is centered below the
+%    figure.
+%    a. Single centered figure:
+%					\begin{figure}[htb]
+%						\centering
+%						\includegraphics[scale=0.5]{my_figure.eps}
+%						\caption{Average outlet velocity magnitude given an average  
+%				        input velocity magnitude of 0.88 m/s.} 
+%						\label{fig:output_rom}
+%					\end{figure}
+%    b. Two by two grid of figures with subcaptions
+%					\begin{figure}[htb]
+%						\centering
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_1_1.eps}
+%							\caption{Subcaption number one}
+%							\label{sfig:first_subfig}
+%						\end{subfigure}
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_1_2.png}
+%							\caption{Subcaption number two}
+%							\label{sfig:second_subfig}
+%						\end{subfigure}
+%
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_2_1.pdf}
+%							\caption{Subcaption number three}
+%							\label{sfig:third_subfig}
+%						\end{subfigure}
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_2_2.eps}
+%							\caption{Subcaption number four}
+%							\label{sfig:fourth_subfig}
+%						\end{subfigure}
+%						\caption{Here is my main caption describing the relationship between the 4 subimages}
+%						\label{fig:main_figure}
+%					\end{figure}
+%
+%============================================================================
+%
+% The following is a list of definitions and packages provided by VTthesis:
+%
+% A. The following packages are provided by the VTthesis class:
+%      amsmath, amsthm, amssymb, enumerate, natbib, hyperref, graphicx, 
+%      tikz (with shapes and arrows libraries), caption, subcaption,
+%      listings, verbatim
+%
+% B. The following theorem environments are defined by VTthesis:
+%      theorem, proposition, lemma, corollary, conjecture
+% 
+% C. The following definition environments are defined by VTthesis:
+%      definition, example, remark, algorithm
+%
+%============================================================================
+%
+%  I hope this template file and the VTthesis class will keep you from having 
+%  to worry about the formatting and allow you to focus on the actual writing.
+%  Good luck, and happy writing.
+%    Alan Lattimer, VT, 2016
+%
+%****************************************************************************

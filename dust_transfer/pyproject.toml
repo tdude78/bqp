@@ -1,0 +1,18 @@
+[build-system]
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "dust_transfer"
+version = "0.1.0"
+description = "Two-phase orbital transfer optimizer and Lightyear high-fidelity propagator (Rust core, Python API)"
+license = {file = "LICENSE.md"}
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+classifiers = ["Programming Language :: Rust", "Programming Language :: Python :: 3", "License :: Other/Proprietary License"]
+
+[tool.maturin]
+include = [{ path = "LICENSE.md", format = "sdist" }]
+python-source = "python"
+module-name = "dust_transfer._native"
+features = ["pyo3/extension-module"]

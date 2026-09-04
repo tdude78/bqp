@@ -1,0 +1,128 @@
+[package]
+name = "lightyear_odeint_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+
+[lib]
+name = "lightyear_odeint_rs"
+crate-type = ["rlib"]
+
+[[example]]
+name = "r43_leg_census"
+required-features = ["prop-census"]
+
+[features]
+default = ["autodiff"]
+autodiff = ["satpy_core/autodiff"]  # Enable DualVec for gradient computations
+# Turns the same-file RHS helpers into real symbols so a sampling profile can
+# attribute them. With `lto = "fat"` and `codegen-units = 1` every helper in
+# `rhs.rs` is inlined into `compute_internal_generic`, which then reads as ~48%
+# "self time" that is really ten different physics blocks with no breakdown.
+# CHANGES CODEGEN -- a build with this on is a different program, so shares are
+# comparable and absolute throughput is not. Never enable it for production.
+profile-symbols = []
+# The exact-duplicate propagation census in `probe.rs`. OFF by default because
+# it takes a process-wide `Mutex` on EVERY propagation -- twice, once for the
+# state map and once for the arc capture -- on a path the campaign runs ~8,261
+# times per design-event across parallel rayon workers. It shipped ungated and
+# no caller outside `probe.rs` ever read its output.
+#
+# THIS FEATURE USED TO CHANGE THE PHYSICS, and the comment here used to claim it
+# could not. FIXED AT 776d92f. What it was, so the signature is recognisable if
+# it ever returns:
+#
+#   `SEEN_STATES` is a BOUNDED 262,144-key map and nothing clears it between
+#   cells. Cell 1 saturated it; past the cap a NOVEL key returned `Err` and
+#   `integrate_final_checked_inner` mapped that to
+#   `FinalPropagationFailure::Census` BEFORE integrating, while a REPEAT key
+#   took the `get_mut` branch and still ran. Measured 2026-08-11, same cell
+#   twice in one process, p4/g1, `--release`, only this feature toggled:
+#   1,259,801,972 / 1,259,801,972 evals with it off against 426,141,782 /
+#   21,294,530 with it on -- a 20x collapse in cell 2, and 2.96x on cell 1
+#   alone. Because a search explores NEW states, exactly the novel arcs were
+#   the ones refused, and `nd_pipeline`'s
+#   `From<FinalPropagationFailure> for QualificationOutcomeV2` turned each one
+#   into a design verdict: zero strict-HF mass rows, every corrected-
+#   distribution candidate failing, the Beta ladder stopping after one stage.
+#
+# NOW: every census writer on the propagation entry path is infallible. A
+# bounded store that fills latches `CENSUS_INVALID`, and propagation proceeds
+# untouched; the quiescent owner must call `probe::report()`, which returns a
+# typed error until `probe::reset()` opens a fresh epoch. The observation
+# self-invalidates instead of the physics changing. Pinned by
+# `probe::shard_tests::state_census_saturation_invalidates_the_census_not_the_propagation`.
+#
+# So a report that renders is complete. A harness that never calls `report()`
+# owns no census claim. On a typed report error, call `probe::reset()` per cell
+# and re-take the measurement.
+#
+# WHY `strict_hf_pin` DID NOT CATCH THE ORIGINAL: that pin verifies
+# bit-exactness on a SINGLE ARC. The divergence appeared in a multi-design,
+# multi-cell lane, which a single-arc pin structurally cannot reach. Do not
+# cite it as the verification for this feature.
+#
+prop-census = []
+# Non-default fixed-counter diagnostic for checked final propagation. It accepts
+# no extra RHS, solver, force, or asset override; authority stays in request.
+scalar-leg-observer = []
+# Selects the release bit-pin lane. The release-codegen bit pins used to gate
+# on `cfg_attr(debug_assertions, ignore)`, but `--profile fast-test` also sets
+# debug-assertions=false (with lto off and cgu=16 — different codegen), so the
+# pins RAN there and red falsely. They now run only when this feature is on;
+# gate.sh's `pins` step passes `--release --features bitpin`. The feature
+# gates test selection only — it compiles no code into the library.
+bitpin = []
+# `legendre-probe` passthrough RETIRED (2026-08-20) with satpy_core's counter.
+[dependencies]
+
+# Logging
+
+# Parallelism & concurrency
+rayon = { workspace = true }
+arc-swap = { workspace = true }
+
+# Internal crates
+nd_sched = { workspace = true }
+nd_config = { workspace = true }
+satpy_core = { workspace = true }
+jb_rs = { workspace = true }
+
+# Linear algebra (for DualVec seed vectors in Jacobian)
+nalgebra = { workspace = true }
+
+# Utilities
+num-traits = { workspace = true }
+anyhow = { workspace = true }
+memmap2 = { workspace = true }
+sha2 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# SIMD (optional)
+wide = { workspace = true }
+
+[dev-dependencies]
+# `assert_relative_eq` in the absorbed ODE-solver tests.
+approx = { workspace = true }
+criterion = { workspace = true }
+
+[[test]]
+name = "prop_timing"
+test = false
+
+[[test]]
+name = "rect_loop_pin"
+test = false
+
+[[bench]]
+name = "odeint_bench"
+harness = false
+
+# W4 build.rs codegen (embedded-asset digests/tables) hashes assets at build
+# time; wired ahead of the build script landing.
+[build-dependencies]
+sha2 = { workspace = true }
+
+[lints]
+workspace = true

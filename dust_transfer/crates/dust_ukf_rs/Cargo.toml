@@ -1,0 +1,16 @@
+[package]
+name = "dust_ukf_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+
+[lib]
+name = "dust_ukf_rs"
+crate-type = ["rlib"]
+
+[dependencies]
+anyhow = { workspace = true }
+nalgebra = { workspace = true }
+
+[lints]
+workspace = true

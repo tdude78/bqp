@@ -1,0 +1,39 @@
+{
+  "schema": "nasa-dust-part-a-v3-jb2008-persistence-authority-v1",
+  "authority_id": "part-a-v3-jb2008-last-value-persistence-v1",
+  "claim": "synthetic last-value-persistence atmosphere scenario; not observed after source cutoff; not a space-weather forecast",
+  "policy": "last-validated-parent-row-persistence-v1",
+  "parent_set_authority": {
+    "manifest_sha256": "09d2cb0cdb5cb805f6b10e9e2141e02d9320c91071491e2b32da87857deac01c",
+    "solfsmy_sha256": "2e8f31bd3294b1982b23bb475b560f00593c90ec0c3e50667ce4e068794efe80",
+    "dtcfile_sha256": "e0d44fc1dbb176693159ebd98ee481319a207c623d7b954509bc404d4aac7594",
+    "license_sha256": "9d2ec826044266557880c7863443ac2609312db39780b1c8239f5578dd75d387",
+    "observed_cutoff_utc_date": "2026-06-03",
+    "final_solfsmy_source_token": "1E10",
+    "final_solar_fields_bits": [
+      "0x406259999999999a",
+      "0x4060bccccccccccd",
+      "0x40602ccccccccccd",
+      "0x405df9999999999a",
+      "0x4064533333333333",
+      "0x40626ccccccccccd",
+      "0x4063900000000000",
+      "0x4062833333333333"
+    ],
+    "final_dtc_hour_utc": 23,
+    "final_dtc_value": 50
+  },
+  "scenario": {
+    "t0_utc": "2026-08-17T17:24:29Z",
+    "authorized_start_utc": "2026-08-15T11:24:29Z",
+    "authorized_end_utc": "2026-08-31T17:24:29Z",
+    "solar_support_first_utc_date": "2026-08-10",
+    "solar_support_last_utc_date": "2026-09-01",
+    "solar_support_record_count": 23,
+    "dtc_support_first_utc_date": "2026-08-15",
+    "dtc_support_last_utc_date": "2026-09-01",
+    "dtc_support_record_count": 18,
+    "max_input_lag_days": 5,
+    "next_day_dtc_required": true
+  }
+}

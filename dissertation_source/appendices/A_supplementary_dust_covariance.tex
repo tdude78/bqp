@@ -1,0 +1,97 @@
+    \chapter{Supplementary Dust-Covariance Details} \label{app:dust_covariance}
+
+    \section{Production Transform and Historical Split Details} \label{ase:covar_split_derivation}
+    This appendix records the operational covariance transport summarized in \cref{se:dustprop} and labels the older split studies explicitly. The main text focuses on workflow and justification; this section gives the compact mathematical form used in the analysis.
+
+    \subsection{Production K1 and Historical Mixture Recombination}
+    Production carries one Gaussian, so the following generic mixture identity is evaluated at
+    \(K=1\) and \(w_1=1\). The \(K>1\) form is retained only to define historical split studies:
+    \begin{equation}
+        p(\mathbf{x})=\sum_{j=1}^{K} w_j\,\mathcal{N}\!\left(\mathbf{x};\boldsymbol{\mu}_j,\mathbf{P}_j\right),\qquad
+        w_j\ge 0,\ \sum_{j=1}^{K}w_j=1.
+    \end{equation}
+    The mixture mean and covariance used for reporting and downstream scoring are
+    \begin{align}
+        \bar{\boldsymbol{\mu}} &= \sum_{j=1}^{K} w_j\,\boldsymbol{\mu}_j,\\
+        \bar{\mathbf{P}} &= \sum_{j=1}^{K} w_j\!\left[\mathbf{P}_j + \left(\boldsymbol{\mu}_j-\bar{\boldsymbol{\mu}}\right)\left(\boldsymbol{\mu}_j-\bar{\boldsymbol{\mu}}\right)^\top\right].
+    \end{align}
+    This decomposition preserves both within-component spread and between-component separation.
+
+    For the historical rank-1 three-component comparison arm, the component weights are not equal:
+    \(\boldsymbol{w}=(1/6,2/3,1/6)\), with standardized axial nodes
+    \((-\sqrt{3},0,+\sqrt{3})\). Thus \(\sum_jw_j\boldsymbol{z}_j=0\) and
+    \(\sum_jw_j\boldsymbol{z}_j\boldsymbol{z}_j^\top=1\), so the split recovers the
+    parent first two moments when the child covariance is
+    \(\boldsymbol{\Sigma}=(1-\alpha^2)\boldsymbol{P}_{\parallel}+\boldsymbol{P}_{\perp}\).
+    A counterfactual rank-2 split uses the tensor product of these nodes and weights, giving nine
+    components with \(W_{ab}=w_aw_b\). These weighted identities replace the
+    equal-component approximation sometimes used in generic mixture descriptions. Neither arm is
+    active production authority: production is sealed at (K=1), so no child offsets are formed.
+    More explicitly, with \(\boldsymbol{z}_{ab}=(z_a,z_b)^\top\),
+    \begin{align}
+        \sum_{a,b}W_{ab}\boldsymbol{z}_{ab}&=\boldsymbol{0},\qquad
+        \sum_{a,b}W_{ab}\boldsymbol{z}_{ab}\boldsymbol{z}_{ab}^{\top}=\boldsymbol{I}_2,\\
+        \sum_{a,b}W_{ab}(\boldsymbol{\mu}_{ab}-\boldsymbol{\mu}_0)\boldsymbol{z}_{ab}^{\top}
+        &=\alpha\boldsymbol{L}_2,\qquad
+        \sum_{a,b}W_{ab}(\boldsymbol{\mu}_{ab}-\boldsymbol{\mu}_0)(\boldsymbol{\mu}_{ab}-\boldsymbol{\mu}_0)^{\top}
+        =\alpha^2\boldsymbol{P}_{\parallel}.
+    \end{align}
+    The third identity is the weighted M-UT cross-covariance between standardized
+    split coordinates and physical mean offsets; it holds for rank 1 as well after
+    replacing \((a,b)\) by \(i\), and fixes the tensor-product weighting used by
+    the moment check and by recombination.
+
+    \subsection{Per-Component Unscented Propagation}
+    Each component is propagated independently with an unscented transform (UT). Production uses
+    Julier's minimal-skew simplex at \(W_0=0\). For the six-state transform, the zero-weight centre
+    point is dropped and the retained \(n+1=7\) whitened offsets
+    \(\boldsymbol{\xi}_i\) carry equal mean and covariance weights
+    \(W_i=1/(n+1)\). With \(\mathbf{S}_j\mathbf{S}_j^\top=\mathbf{P}_j\),
+    \begin{equation}
+        \boldsymbol{\chi}_{j,i}=\boldsymbol{\mu}_j+\mathbf{S}_j\boldsymbol{\xi}_i,
+        \qquad i=1,\ldots,n+1.
+    \end{equation}
+    With scenario dynamics map \(\Phi_{t_0\rightarrow t}\), propagated sigma points are \(\hat{\boldsymbol{\chi}}_{j,i}(t)=\Phi_{t_0\rightarrow t}(\boldsymbol{\chi}_{j,i})\), and component moments become
+    \begin{align}
+        \boldsymbol{\mu}_j^{+} &= \sum_i W_i^{(m)}\,\hat{\boldsymbol{\chi}}_{j,i},\\
+        \mathbf{P}_j^{+} &= \sum_i W_i^{(c)}\!\left(\hat{\boldsymbol{\chi}}_{j,i}-\boldsymbol{\mu}_j^{+}\right)\!\left(\hat{\boldsymbol{\chi}}_{j,i}-\boldsymbol{\mu}_j^{+}\right)^\top + \mathbf{Q}.
+    \end{align}
+    Here \(\mathbf{Q}\) denotes optional process-noise augmentation when enabled; baseline short-horizon runs typically use deterministic propagation with fixed environmental drivers. The scaled-UT triple and its 13-point Van der Merwe construction are historical comparison authority, not production inputs. They are distinct from the DART momentum-enhancement \(\kappa\) in \cref{eq:dart_momentum}.
+
+    For encounter-plane sizing, let \(\mathbf{H}\in\mathbb{R}^{2\times3}\) contain the
+    orthonormal in-plane basis rows. The target position covariance is a fixed,
+    intercept-local RIC covariance, not a covariance propagated by the dust model.
+    If \(\mathbf{R}_{\mathrm{RIC}\rightarrow\mathrm{ECI}}^{\mathrm{int}}\) maps that
+    intercept-local frame into ECI, define
+    \(\boldsymbol{\Sigma}_{t}^{\mathrm{int,ECI}}=\mathbf{R}_{\mathrm{RIC}\rightarrow\mathrm{ECI}}^{\mathrm{int}}
+    \boldsymbol{\Sigma}_{t}^{\mathrm{int,RIC}}\mathbf{R}_{\mathrm{RIC}\rightarrow\mathrm{ECI}}^{\mathrm{int}\top}\).
+    The relative projected mean and covariance are
+    \begin{align}
+        \boldsymbol{\mu}_{\mathrm{rel}}^{2D} &= \mathbf{H}(\boldsymbol{\mu}_{d}-\boldsymbol{\mu}_{t}),\\
+        \boldsymbol{\Sigma}_{\mathrm{rel}}^{2D} &= \mathbf{H}\left(\boldsymbol{\Sigma}_{d}+\boldsymbol{\Sigma}_{t}^{\mathrm{int,ECI}}\right)\mathbf{H}^{\top}\quad\text{(Pc-inversion lane)}.
+    \end{align}
+    The two covariances are projected separately and summed in the encounter plane. The shared-target lane omits \(\boldsymbol{\Sigma}_{t}\) here and integrates it once outside the packet exponent. The baseline assumes zero dust--target cross-covariance. A future correlated model
+    would add the corresponding cross terms before projection; it is not silently folded
+    into the current target covariance.
+
+In Chapter~3 terms, this is the local nonlinear transport step used in the dust lane. Production carries one Gaussian component and propagates its seven Julier simplex points deterministically through the scenario dynamics. Recombination restores the first two moments needed for downstream encounter-plane calculations. Historical adaptive-\(\alpha\) and bounded-Monte-Carlo split-selection arms are counterfactual studies; they do not run in production and do not define current results.
+
+    \subsection{Split-Criterion Family and Baseline Choice}
+    The compiled authority retains a dormant split recipe even though production (K=1) does not form child components. It is sealed in the compiled science constant, not in run configuration: the criterion token \texttt{maxvar} and policy token \texttt{scaled} live in \texttt{mf\_transfer.native\_policy}, and \texttt{split\_rank = 1} with \texttt{gmm\_components = 1} in \texttt{mf\_lowering}. No run-configuration key can override them, and the implemented kernel is max-variance selection with the scaled time-of-flight schedule unconditionally; the one-variant selector enums were removed once they could no longer select anything.
+    In a counterfactual (K>1) arm, the \texttt{maxvar} rule selects the dominant covariance direction, that is, the eigenvector associated with the largest eigenvalue of the component covariance. With \texttt{split\_rank = 1}, only that single dominant mode is split. The sealed scaled-TOF policy sets \(\alpha=0.35\alpha_{\max}\) through \(7200\) seconds and \(\alpha=0.60\alpha_{\max}\) above that boundary, setting how much principal-direction variance remains inside the child covariance
+    \[
+        \boldsymbol{\Sigma}=(1-\alpha^2)\,\boldsymbol{P}_{\parallel}+\boldsymbol{P}_{\perp}
+    \]
+    and how much appears through the separation of the child means. At production (K=1), those offsets are identically absent, so the criterion, rank, and scaled-TOF schedule are sealed but dormant. The historical (K=3) arm used the three-point standard-normal Gauss--Hermite layout with weights \(1/6,2/3,1/6\).
+
+    Current production is therefore (K=1) + Julier-7. The historical (K=3), Van der Merwe-13, adaptive-\(\alpha\), Monte Carlo, and alternate-criterion arms are retained only as labeled counterfactual context, not as current runtime paths or current-result authority.
+
+    \subsection{Selection-Evidence Workflow}
+    Historical split-policy studies used the following workflow; this is not the current production selector:
+    \begin{itemize}[leftmargin=*]
+        \item a short-horizon \(p90\) criterion comparison over representative \gls{leo} scenarios with Wasserstein distance as the primary discriminator and MaDEM/MCR/CvM/ELK/NISE as diagnostics;
+        \item multi-seed ranking and tie-breaking on pooled distributional diagnostics, with criterion and regime labels retained for audit;
+        \item a direct split-versus-no-split multihorizon \glsentryshort{hf} comparison over horizons from 10 to \SI{180}{\minute}, recording accuracy, runtime, and scenario coverage;
+        \item a historical fixed-default decision rule that records aggregate diagnostics, horizon coverage, variability, and the counterfactual cost of retaining a split-capable representation rather than relying on one pooled average.
+    \end{itemize}
+These procedures describe counterfactual study design only. Numerical outcomes are outside this methods appendix and are not inferred here.

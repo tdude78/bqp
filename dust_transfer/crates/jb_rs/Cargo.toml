@@ -1,0 +1,37 @@
+[package]
+name = "jb_rs"
+version = "0.1.0"
+edition = "2021"
+license-file = "../../LICENSE.md"
+
+[lib]
+name = "jb_rs"
+crate-type = ["rlib"]
+
+# `cost-map` RETIRED (2026-08-21) together with the `jb2008::cost_map` module it
+# gated: 157 lines of `#[inline]` forwarder onto private kernel internals, whose
+# only consumer was the feature-gated half of `examples/jb2008_cost_map`. No
+# manifest, script or CI lane in the workspace ever named it, so no build ever
+# compiled the module and nothing removed was linked into any artifact. Its own
+# doc comment gave the reason to delete rather than keep gating it: a second
+# caller on a bit-pinned hot path can change an inlining decision under fat LTO.
+# The example survives and still prices the whole kernel and the libm census on
+# production codegen -- which was always the arm the notes told you to quote.
+
+[dependencies]
+anyhow = { workspace = true }
+num-traits = { workspace = true }
+# Boole's rule evaluates the temperature at exactly four independent abscissae
+# per quadrature step, so `f64x4` is the natural width for `jb_local_temp_x4`.
+wide = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+
+# W4 build.rs codegen (embedded-asset digests/tables) hashes assets at build
+# time; wired ahead of the build script landing.
+[build-dependencies]
+sha2 = { workspace = true }
+
+[lints]
+workspace = true
