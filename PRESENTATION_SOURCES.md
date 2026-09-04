@@ -139,52 +139,52 @@ Several entries below carry an explicit qualification for exactly that reason.
 
 ## Studies and preprints
 
-**Acciarini, Baydin and Izzo, dSGP4 and ML-dSGP4.** <https://arxiv.org/abs/2402.04830>  
+**Acciarini, G., Baydin, A. G., and Izzo, D. (2024). "Closing the Gap Between SGP4 and High-Precision Propagation via Differentiable Programming" (dSGP4 and ML-dSGP4).** arXiv:2402.04830, <https://arxiv.org/abs/2402.04830>. Published in Acta Astronautica 226(1) (2025) 8, DOI 10.1016/j.actaastro.2024.10.063.  
 *Slides:* Backup: SOTA bets and kill gates.  
 *Supports:* SGP4 made differentiable, with learned input and output corrections that behave as identity operators by default.  
 *Qualification:* an open architecture and benchmark reference, never BQP heritage.
 
-**Priestley and Handley, jaxsgp4, 2026.** <https://arxiv.org/abs/2603.27830>  
+**Priestley, C., and Handley, W. (2026). "jaxsgp4: GPU-accelerated mega-constellation propagation with batch parallelism".** arXiv:2603.27830, submitted 29 March 2026, <https://arxiv.org/abs/2603.27830>.  
 *Slides:* Raw propagation speed is commoditizing (Figure 1 reproduced in backup).  
 *Supports:* 9,341 satellites propagated to 1,000 future times in 3.8 ms on a single A100, and about 1,500x maximum speedup over the paper's own C++ baseline.  
 *Qualification:* large-batch JAX GPU FP32 against C++ CPU FP64, under the paper's declared comparison. It is a study result, not BQP performance, and it establishes no accuracy, covariance realism, or safety claim. The deck uses it to demote raw speed as a moat.
 
-**Parker and Linares, Gannon storm drag analysis, Journal of Spacecraft and Rockets 61(6), 2024.** <https://arxiv.org/abs/2406.08617>  
+**Parker, W. E., and Linares, R. (2024). "Satellite Drag Analysis During the May 2024 Gannon Geomagnetic Storm".** Journal of Spacecraft and Rockets 61(5), 1412-1416. arXiv:2406.08617, <https://arxiv.org/abs/2406.08617>.  
 *Slides:* Raw propagation speed is commoditizing; Backup: where the LEO error actually lives.  
 *Supports:* a two to four times degradation during the storm, with the geomagnetic ap forecast poor even one day ahead.  
 *Qualification:* one storm, TLE-derived. Drag is not the only error source.
 
-**Wang and Bai, AETHER-P3 learned density with calibrated uncertainty, 2026 preprint.** <https://arxiv.org/abs/2608.00352>  
+**Wang, R., and Bai, X. (2026). "A Machine-Learning-Based Global Thermospheric Density Forecasting Model" (AETHER-P3).** arXiv:2608.00352, submitted 31 July 2026, <https://arxiv.org/abs/2608.00352>. Journal version in Space Weather 24(6), DOI 10.1029/2026SW004968.  
 *Slides:* Backup: where the LEO error actually lives; Backup: SOTA bets and kill gates.  
 *Supports:* learned thermospheric density with calibrated uncertainty over roughly 300 to 520 km.  
 *Qualification:* a preprint, and not BQP work. The storm mode the deck proposes is a proposal.
 
-**Moody, Axelrad and Russell, dominant-dimension correction, 2026.** <https://arxiv.org/abs/2602.16764>  
+**Moody, A., Axelrad, P., and Russell, R. (2026). "Machine Learning Argument of Latitude Error Model for LEO Satellite Orbit and Covariance Correction".** arXiv:2602.16764, <https://arxiv.org/abs/2602.16764>. In the 2026 IEEE Aerospace Conference.  
 *Slides:* Backup: SOTA bets and kill gates.  
 *Supports:* a correction acting along the dominant error dimension.  
 *Qualification:* research direction, not BQP heritage.
 
-**Shahid et al., continuous-time probabilistic corrector, 2026 preprint.** <https://arxiv.org/abs/2606.21021>  
+**Shahid, M. B., Jiang, Z., Sarkar, S., and Fleming, C. (2026). "Continuous-Time Probabilistic Correctors for Uncertainty-Aware Physics-Based Spacecraft Trajectory Forecasting".** arXiv:2606.21021, submitted 19 June 2026, <https://arxiv.org/abs/2606.21021>.  
 *Slides:* Sources and evidence labels (referenced from the SOTA backup).  
 *Supports:* a physics predictor with a learned continuous-time corrector that emits full-covariance, heavy-tailed (Student-t) predictive uncertainty, evaluated with proper scoring and Mahalanobis calibration.  
 *Qualification:* preprint status and single-study scope. A current research direction only, labelled as a preprint on the slide and in the source map.
 
-**Stevenson et al., screening benchmark, Advances in Space Research 72 (2023) 2660.** <https://oa.upm.es/80898/1/10020279.pdf>  
+**Stevenson, E., Rodriguez-Fernandez, V., Urrutxua, H., and Camacho, D. (2023). "Benchmarking deep learning approaches for all-vs-all conjunction screening".** Advances in Space Research 72(7), 2660-2675, DOI 10.1016/j.asr.2023.01.036. Open-access copy: <https://oa.upm.es/80898/1/10020279.pdf>.  
 *Slides:* Backup: screening economics, and the miss budget.  
 *Supports:* 170 million pairs screened over 7 days in the CNES BAS3E simulation.  
 *Qualification:* a study result, not BQP performance.
 
-**Holzinger and Scheeres, control distance metric, AIAA Journal of Guidance, Control, and Dynamics.** <https://arc.aiaa.org/doi/10.2514/1.53245> (DOI 10.2514/1.53245)  
+**Holzinger, M. J., Scheeres, D. J., and Alfriend, K. T. (2012). "Object Correlation, Maneuver Detection, and Characterization Using Control Distance Metrics".** Journal of Guidance, Control, and Dynamics 35(4), 1312-1325, DOI 10.2514/1.53245, <https://arc.aiaa.org/doi/10.2514/1.53245>.  
 *Slides:* Backup: SOTA bets and kill gates.  
 *Supports:* a principled control-effort distance for associating tracks across a maneuver.  
 *Qualification:* method reference.
 
-**Park et al., covariance realism assessment, AMOS 2019.** <https://amostech.com/TechnicalPapers/2019/Astrodynamics/Park.pdf>  
+**Park, I., Stevenson, M., Nicolls, M., et al. (LeoLabs, 6 authors) (2019). "Statistical Covariance Realism Assessment of LeoLabs' Orbit Determination System".** AMOS 2019, <https://amostech.com/TechnicalPapers/2019/Astrodynamics/Park.pdf>.  
 *Slides:* Trust is a measured operating property.  
 *Supports:* covariance consistency as a measurable acceptance property.  
 *Qualification:* method and assessment reference.
 
-**Escribano et al., stochastic-hybrid maneuver detection and tracking.** <https://arxiv.org/abs/2109.07801>  
+**Escribano, G., Sanjurjo-Rivo, M., Siminski, J., Pastor, A., and Escobar, D. (2021). "Automatic maneuver detection and tracking of space objects in optical survey scenarios based on stochastic hybrid systems formulation".** arXiv:2109.07801, <https://arxiv.org/abs/2109.07801>.  
 *Slides:* Sources and evidence labels (referenced from the SOTA backup).  
 *Supports:* a stochastic-hybrid formulation with sequential Monte Carlo filtering that jointly detects and tracks maneuvering space objects online.  
 *Qualification:* a research method, not BQP heritage or proof of performance on BQP data. One candidate to compare against innovation tests and customer incumbents.
@@ -194,32 +194,32 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* hybrid kinematic and non-kinematic track association as a path to maintaining custody through maneuvers.  
 *Qualification:* the strongest quoted precision and recall include simulated maneuver-related tracks. The deck does not quote them as operational performance.
 
-**Ferrara et al., commit-time decision policy, 2025.** <https://arxiv.org/abs/2508.05876>  
+**Ferrara, F., Schillinger Arana, L. W., Dörfler, F., and Li, S. H. Q. (2025). "A Markov Decision Process Framework for Early Maneuver Decisions in Satellite Collision Avoidance".** arXiv:2508.05876, v1 7 August 2025, v2 10 December 2025, <https://arxiv.org/abs/2508.05876>.  
 *Slides:* Backup: constellation maintenance is a constrained loop.  
 *Supports:* commit timing trading propellant against residual risk.  
 *Qualification:* synthetic events. External evidence, not BQP heritage.
 
-**Conformal prediction in the loop.** <https://arxiv.org/abs/2510.16376>  
+**Wang, H., and Ning, C. (2025). "Conformal Prediction in The Loop: A Feedback-Based Uncertainty Model for Trajectory Optimization".** arXiv:2510.16376, <https://arxiv.org/abs/2510.16376>. Accepted to the NeurIPS 2025 main track.  
 *Slides:* Trust is a measured operating property.  
 *Supports:* constructing uncertainty sets with explicit coverage guarantees.  
 *Qualification:* method evidence for a proposed coverage commitment. Never current BQP performance.
 
-**Conformal flight-safety monitoring.** <https://arxiv.org/abs/2511.20811>  
+**Feldman, A. O., Harp, D. I., Duncan, J., et al. (4 authors) (2025). "Conformal Safety Monitoring for Flight Testing: A Case Study in Data-Driven Safety Learning".** arXiv:2511.20811, <https://arxiv.org/abs/2511.20811>. ICRA 2025 workshop.  
 *Slides:* Trust is a measured operating property.  
 *Supports:* calibrating a flight-safety classifier with conformal prediction, with matching theoretical guarantees.  
 *Qualification:* as above.
 
-**Antunes de Sa et al., machine-to-machine coordination, AMOS 2023.** <https://amostech.com/TechnicalPapers/2023/Poster/Antunes_de_Sa.pdf>  
+**Antunes de Sá, A., Shouppe, M., Takahashi, S., et al. (7 authors) (2023). "Characterizing a Novel Coordinated Optimal Avoidance Maneuver Framework for Space Traffic Management".** AMOS 2023 poster session, <https://amostech.com/TechnicalPapers/2023/Poster/Antunes_de_Sa.pdf>.  
 *Slides:* How BQP wins in a market that already exists; Backup: competitor evidence changes the wedge.  
 *Supports:* Kayhan unveiling a machine-to-machine interface for autonomous coordination and pre-coordination of maneuver responsibility.  
 *Qualification:* durable company-technical evidence about a competitor. The deck attaches no catalogue-size language to it.
 
-**Quantum annealing benchmarking, npj Quantum Information, 2025.** <https://www.nature.com/articles/s41534-025-01020-1>  
+**Kim, S., Ahn, S.-W., Suh, I.-S., et al. (6 authors) (2025). "Quantum annealing for combinatorial optimization: a benchmarking study".** npj Quantum Information 11(1), article 77, DOI 10.1038/s41534-025-01020-1, <https://www.nature.com/articles/s41534-025-01020-1>.  
 *Slides:* Backup: quantum language that survives diligence.  
 *Supports:* the evidence bar a quantum speedup claim has to clear.  
 *Qualification:* used to set the bar, not to claim a BQP result.
 
-**Scientific Reports, 2025.** <https://www.nature.com/articles/s41598-025-96220-2>  
+**Quinton, F. A., Myhr, P. A. S., Barani, M., et al. (5 authors) (2025). "Quantum annealing applications, challenges and limitations for optimisation problems compared to classical solvers".** Scientific Reports 15(1), article 12733, DOI 10.1038/s41598-025-96220-2, <https://www.nature.com/articles/s41598-025-96220-2>.  
 *Slides:* Backup: quantum language that survives diligence.  
 *Supports:* the same evidence bar.  
 *Qualification:* as above.
@@ -543,6 +543,25 @@ directory) records the checks behind these citations. In summary:
   date, the Gannon storm qualification, the Kayhan machine-to-machine claim,
   the two conformal-prediction guarantees, and the wording on the BQP product
   page.
+
+## Corrections found while compiling this list
+
+Publisher records were re-checked on 2026-09-03 while writing these entries.
+Two citations in the deck's own notes need correcting, and the corrected form
+is what appears above.
+
+- The Gannon storm paper is Journal of Spacecraft and Rockets **61(5)**, pages
+  1412 to 1416. The deck's claim ledger records it as 61(6). The volume, year
+  and content are unaffected.
+- The control-distance-metric paper has **three** authors: Holzinger, Scheeres
+  and Alfriend, Journal of Guidance, Control, and Dynamics 35(4), 1312 to 1325,
+  2012. The deck cites it as "Holzinger and Scheeres".
+
+Two further cautions on the primary records themselves. The AETHER-P3 journal
+entry lists an article number of `e2026SW000000`, which is an author
+placeholder rather than an assigned number, so cite the DOI instead. The arXiv
+record for the stochastic-hybrid maneuver paper carries no journal reference,
+so no journal citation should be attached to it.
 
 Two things are worth carrying forward when reusing this list. First, several
 sources are explicitly date-sensitive: the ESA statistics page, the TraCSS
