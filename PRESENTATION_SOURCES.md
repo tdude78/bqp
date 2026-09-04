@@ -15,7 +15,9 @@ publishers, who own the works. Nothing in this file is a BQP performance claim
 or a claim about the author's own work.
 
 Compiled 2026-09-03. Sources were last verified live on 2026-08-31 during the
-deck closeout; see "Verification record" at the end.
+deck closeout, and the citations themselves were re-checked against publisher
+records on 2026-09-03. One deck link is now dead and two citations needed
+correcting; see "Verification record" at the end.
 
 ## How to read the entries
 
@@ -50,7 +52,7 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* roughly 1.2 million debris objects between 1 and 10 cm; the catalogued-object history in Figure 2.1 exceeding 40,000 objects; and, in backup, a business-as-usual 200-year risk index about four times the reference sustainability threshold.  
 *Qualification:* the Figure 2.1 series is limited by surveillance capability and uses ESA object classes. It is neither the DISCOS tracked count nor the 1 to 10 cm estimate. The risk index is a projection, not measured current risk. Reuse of the figure is personal and non-commercial with source and issue-date credit.
 
-**Mashiku et al., NASA CARA AI/ML assessment, AMOS 2025.** <https://ntrs.nasa.gov/api/citations/20250008251/downloads/AMOS_2025_AIML_Paper_UpdatedContractorAddress.pdf>  
+**Mashiku, A., Newman, L., and Highsmith, D. (2025). "NASA Conjunction Assessment Risk Analysis (CARA) Compendium for Artificial Intelligence and Machine Learning for Satellite Collision Avoidance".** AMOS 2025 Technical Papers, DOI 10.64861/HKAM1019, <https://doi.org/10.64861/HKAM1019>. **The link used in the deck is dead; see the corrections section.**  
 *Slides:* Trust is a measured operating property; Backup: benchmark protocol.  
 *Supports:* operational trust depends on state accuracy, covariance realism, screening behaviour, and safe handling outside the training distribution. The reviewed LSTM example had 27 high-risk events among 782 total, with 211 m average and 2,480 m maximum miss-distance prediction error at an average 1.8 days to time of closest approach. The paper concludes that fully automated AI/ML operational risk assessment is not currently viable and favours hybrid approaches plus covariance realism.  
 *Qualification:* study data, not BQP performance. The architecture the deck proposes is informed by CARA, not prescribed by NASA.
@@ -60,7 +62,7 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* covariance-realism and probability-of-collision methods that can anchor benchmark concordance.  
 *Qualification:* apply the exact NASA method and assumptions only where the customer mission and data support them. Being a benchmark reference is not certification.
 
-**NASA robotic CARA probability-of-collision methods.** <https://ntrs.nasa.gov/api/citations/20190011726/downloads/20190011726.pdf>  
+**Johnson, M. R. (2018). "NASA Robotic CARA Probability of Collision".** NTRS 20190011726, report GSFC-E-DAA-TN66334, <https://ntrs.nasa.gov/api/citations/20190011726/downloads/20190011726.pdf>. A CARA operations training presentation, not a peer-reviewed paper.  
 *Slides:* Backup: screening economics, and the miss budget.  
 *Supports:* the Foster, Chan, Patera and Alfano probability-of-collision methods, with CARA using Foster.  
 *Qualification:* primary method reference only.
@@ -97,17 +99,17 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* a navigation experiment refined the orbits of more than 200 space objects onboard, without ground intervention, over three days.  
 *Qualification:* an existence proof, not proof of calibrated onboard BQPhy propagation.
 
-**NASA/TP-20260005089, Multi-Agent Swarm State of the Art Report, 2026.** <https://ntrs.nasa.gov/citations/20260005089>  
+**Adams, C. A., Smith, T., Woodard, A., et al. (6 authors) (2026). "Multi-Agent Swarm State of the Art Report".** NASA/TP-20260005089, 4 June 2026, DOI 10.64631/ZOXJ3148, <https://ntrs.nasa.gov/citations/20260005089>.  
 *Slides:* Backup: constellation maintenance is a constrained loop.  
 *Supports:* Starling ROMEO combined navigation, orbital-maintenance planning, and maneuver-command services; generated maneuvers still received ground conjunction screening and a final go/no-go; explicit delta-v limits applied; and the demonstration was only partly successful.  
 *Qualification:* an external operational lesson supporting staged authority and independent screening. It is not proof of general autonomous constellation maintenance, and it is not BQP heritage.
 
-**NASA formal runtime assurance.** <https://ntrs.nasa.gov/citations/20240006522>  
+**Slagel, J. T., White, L. M., Dutle, A., et al. (5 authors) (2024). "A Formal Verification Framework for Runtime Assurance".** 16th NASA Formal Methods Symposium, 4 to 6 June 2024. NTRS 20240006522, <https://ntrs.nasa.gov/citations/20240006522>.  
 *Slides:* Backup: authority follows assurance; Backup: SOTA bets and kill gates.  
 *Supports:* runtime assurance can monitor an advanced component and switch to a trusted reversionary component when a safety property is threatened.  
 *Qualification:* an assurance architecture reference. Not a space collision-avoidance certification, and not a claim that BQPhy implements Simplex runtime assurance today.
 
-**ASTM F3269-21, run-time assurance practice.** <https://store.astm.org/f3269-21.html>  
+**ASTM International (2021). "Standard Practice for Methods to Safely Bound Behavior of Aircraft Systems Containing Complex Functions Using Run-Time Assurance".** ASTM F3269-21, <https://store.astm.org/f3269-21.html>.  
 *Slides:* Backup: authority follows assurance; Backup: SOTA bets and kill gates.  
 *Supports:* the structure of the proposed authority ladder.  
 *Qualification:* the practice is written for aircraft, not space certification. The deck notes that DoD Directive 3000.09 is not a blanket rule for non-weapon collision avoidance.
@@ -122,12 +124,12 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* higher-performance, power-managed, fault-tolerant spaceflight computing that supports AI/ML and autonomy.  
 *Qualification:* enabling-compute evidence. It does not make HPSC qualified or available for a BQPhy mission without integration and test, and Jetson-class execution is not flight qualification.
 
-**CCSDS 502.0-B-3, Orbit Data Messages.** <https://ccsds.org/Pubs/502x0b3e1.pdf>  
+**CCSDS (2023). "Orbit Data Messages, Recommended Standard".** CCSDS 502.0-B-3, Blue Book, Issue 3, April 2023, <https://ccsds.org/Pubs/502x0b3e1.pdf>.  
 *Slides:* Reference architecture: integrate, do not displace.  
 *Supports:* OMM and OEM as the appropriate common exchange products for orbit data.  
 *Qualification:* exact message and field compliance must be defined during product design.
 
-**CCSDS 508.0-B-1, Conjunction Data Message.** <https://ccsds.org/Pubs/508x0b1e2c2.pdf>  
+**CCSDS (2013). "Conjunction Data Message, Recommended Standard".** CCSDS 508.0-B-1, Blue Book, Issue 1, June 2013, with updates through Technical Corrigendum 2, October 2021, <https://ccsds.org/Pubs/508x0b1e2c2.pdf>.  
 *Slides:* Reference architecture: integrate, do not displace.  
 *Supports:* the CDM as the common conjunction exchange product.  
 *Qualification:* as above.
@@ -189,7 +191,7 @@ Several entries below carry an explicit qualification for exactly that reason.
 *Supports:* a stochastic-hybrid formulation with sequential Monte Carlo filtering that jointly detects and tracks maneuvering space objects online.  
 *Qualification:* a research method, not BQP heritage or proof of performance on BQP data. One candidate to compare against innovation tests and customer incumbents.
 
-**Hofer et al., maneuver custody through hybrid track association, AMOS 2024.** <https://amostech.com/TechnicalPapers/2024/SDA/Hofer.pdf>  
+**Hofer, G. P., Jones, G. G., and Oldroyd, W. J. (2024). "Post-Maneuver UCT Correlation Using Multi-Source Data Streams".** AMOS 2024, Space Domain Awareness track, <https://amostech.com/TechnicalPapers/2024/SDA/Hofer.pdf>.  
 *Slides:* Sources and evidence labels (referenced from the SOTA backup).  
 *Supports:* hybrid kinematic and non-kinematic track association as a path to maintaining custody through maneuvers.  
 *Qualification:* the strongest quoted precision and recall include simulated maneuver-related tracks. The deck does not quote them as operational performance.
@@ -556,6 +558,16 @@ is what appears above.
 - The control-distance-metric paper has **three** authors: Holzinger, Scheeres
   and Alfriend, Journal of Guidance, Control, and Dynamics 35(4), 1312 to 1325,
   2012. The deck cites it as "Holzinger and Scheeres".
+
+One cited link is dead. The deck points at the NASA CARA AI/ML paper through
+a direct NTRS download URL
+(`ntrs.nasa.gov/api/citations/20250008251/downloads/AMOS_2025_AIML_Paper_UpdatedContractorAddress.pdf`).
+That URL returned HTTP 404 when checked on 2026-09-03, and so does the NTRS
+API record for accession 20250008251, so the deck's 31 August check has been
+overtaken. The paper itself is fine and is cited above by its DOI,
+10.64861/HKAM1019, which resolves through Crossref to the AMOS 2025 technical
+papers. This matters because that source carries the trust slide and two
+backups. Repoint the deck link at the DOI before the deck is reused.
 
 Two further cautions on the primary records themselves. The AETHER-P3 journal
 entry lists an article number of `e2026SW000000`, which is an author
