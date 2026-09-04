@@ -22,6 +22,11 @@ package in `python/dust_transfer/`.
 Units everywhere are km, km/s, seconds, and Julian Date (UTC). An ECI state is
 `[x, y, z, vx, vy, vz]`.
 
+Two more documents live in `docs/`. `docs/TOUR.md` is a map of the Rust code:
+how a Python call travels through the crates, what each crate is for, a
+glossary, and how to browse and test. `docs/API.md` lists every Python
+function, argument and return key.
+
 ## Install
 
 Build from source. I have tested this on macOS arm64 with CPython 3.12 and
@@ -192,6 +197,8 @@ src/lib.rs            the binding
 python/dust_transfer  Python package (__init__.py: re-exports plus summarize())
 examples/quickstart.py
 tests_smoke.py
+docs/TOUR.md          map of the Rust code, glossary, how to browse and test
+docs/API.md           Python API reference
 crates/               11 vendored crates from nasa_dust_rust
 assets/reference/     the two reference files the crates include at build time
 ```

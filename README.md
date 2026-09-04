@@ -17,7 +17,7 @@ contents.
 | Draft dissertation (PDF). A draft: please do not distribute or cite it. | `dissertation_dewalch_draft.pdf` |
 | Dissertation LaTeX source | `dissertation_source/` (build with `./build_pdf.sh`) |
 | License and notices | `LICENSE.md`, `THIRD_PARTY_NOTICES.md`, `third_party_licenses/` |
-| Transfer optimizer and high-fidelity propagator, Rust with a Python API. Builds from source in about a minute. | `dust_transfer/`, starting at `dust_transfer/README.md` |
+| Transfer optimizer and high-fidelity propagator, Rust with a Python API. Builds from source in about a minute. | `dust_transfer/`, starting at `dust_transfer/README.md`, then `dust_transfer/docs/TOUR.md` for a map of the code |
 
 To run the code:
 
